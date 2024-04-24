@@ -52,13 +52,15 @@ public class Board extends JPanel {
 	private JTextPane nextpane;// 넥스트블록 표시하는 판
 	private int[][] board; // 게임 보드의 상태를 나타내는 2차원 배열
 	private Block curr; // 현재 움직이고 있는 블록
+	private String curr_name = "";
+	private String nextcurr_name = "";
 	private Block nextcurr; // 다음 블럭
 
 	public int mode = 1; // 난이도 설정 easy == 0, normal == 1, hard == 2;
 	public int item = 0; // itemMode 0 == false(보통모드), 1 == true(아이템모드);
 	public boolean gameOver = false; // 게임오버를 알려주는변수 true == 게임오버
 
-
+	public boolean weightblockLock = false;
 
 	// 생성자 Board, 게임 창 설정 및 초기게임 보드 준비, 첫 번째 블록 생성하고, 타이머 시작
 	public Board() {
@@ -122,66 +124,173 @@ public class Board extends JPanel {
 
 
 	private Block getRandomBlock() {
-
 		Random rnd = new Random(System.currentTimeMillis()); // 현재 시간 기준으로 랜덤 객체 생성
 		bricks++;
 		setLevel();
 		int slot = 0;
 
-		switch (mode) {
+		if(item == 0)
+		{
+			switch (mode) {
 
-			case 0: //easy
-				slot = rnd.nextInt(36); // 0부터 35사이의 난수를 생성 (총 36개 슬롯) 6 : 5 : 5 : 5 : 5 : 5 :5
-				if (slot < 6) { // 0번 블럭을 6번 포함 (0, 1, 2, 3, 4, 5) 6
-					return new IBlock(); // I 모양 블록 생성 반환
-				} else if (slot < 11) { // 1번 블럭을 5번 포함 (6, 7, 8, 9, 10) 5
-					return new JBlock(); // J 모양 블록 생성 반환
-				} else if (slot < 16) { // 2번 블럭을 5번 포함 (11, 12, 13, 14, 15)5
-					return new LBlock(); // L 모양 블록 생성 반환
-				} else if (slot < 21) { // 3번 블럭을 5번 포함 (16, 17, 18, 19, 20)5
-					return new ZBlock(); // Z 모양 블록 생성 반환
-				} else if (slot < 26) { // 4번 블럭을 5번 포함 (21, 22, 23, 24, 25)5
-					return new SBlock(); // S 모양 블록 생성 반환
-				} else if (slot < 31) { // 5번 블럭을 5번 포함 (26, 27, 28, 29, 30)5
-					return new TBlock(); // T 모양 블록 생성 반환
-				} else { // 나머지는 6번 블럭 (31, 32, 33, 34, 35)
-					return new OBlock(); // O 모양 블록 생성 반환
-				}
-			case 1: //normal
-				slot = rnd.nextInt(7);
-				if (slot == 0) { // 0번 블럭을 4번 포함 (0, 1, 2, 3)
-					return new IBlock();
-				} else if (slot == 1) { // 1번 블럭
-					return new JBlock();
-				} else if (slot == 2) { // 2번 블럭
-					return new LBlock();
-				} else if (slot == 3) { // 3번 블럭
-					return new ZBlock();
-				} else if (slot == 4) { // 4번 블럭
-					return new SBlock();
-				} else if (slot == 5) { // 5번 블럭
-					return new TBlock();
-				} else { // 나머지는 6번 블럭
-					return new OBlock();
-				}
-			case 2: //hard //8 : 10 : 10 : 10 : 10 : 10 : 10  -> 4 : 5 : 5 : 5 : 5 : 5 :5
-				slot = rnd.nextInt(34); // 0부터 33사이의 난수를 생성 (총 34개 슬롯)
-				if (slot < 4) { // 0번 블럭을 4번 포함 (0, 1, 2, 3)
-					return new IBlock();
-				} else if (slot < 9) { // 1번 블럭을 5번 포함 (4, 5, 6, 7, 8)
-					return new JBlock();
-				} else if (slot < 14) { // 2번 블럭을 5번 포함 (9, 10, 11, 12, 13)
-					return new LBlock();
-				} else if (slot < 19) { // 3번 블럭을 5번 포함 (14, 15, 16, 17, 18)
-					return new ZBlock();
-				} else if (slot < 24) { // 4번 블럭을 5번 포함 (19, 20, 21, 22, 23)
-					return new SBlock();
-				} else if (slot < 29) { // 5번 블럭을 5번 포함 (24, 25, 26, 27, 28)
-					return new TBlock();
-				} else { // 나머지는 6번 블럭 (29, 30, 31, 32, 33)
-					return new OBlock();
-				}
+				case 0: //easy
+					slot = rnd.nextInt(36); // 0부터 35사이의 난수를 생성 (총 36개 슬롯) 6 : 5 : 5 : 5 : 5 : 5 :5
+					if (slot < 6) { // 0번 블럭을 6번 포함 (0, 1, 2, 3, 4, 5) 6
+						return new IBlock(); // I 모양 블록 생성 반환
+					} else if (slot < 11) { // 1번 블럭을 5번 포함 (6, 7, 8, 9, 10) 5
+						return new JBlock(); // J 모양 블록 생성 반환
+					} else if (slot < 16) { // 2번 블럭을 5번 포함 (11, 12, 13, 14, 15)5
+						return new LBlock(); // L 모양 블록 생성 반환
+					} else if (slot < 21) { // 3번 블럭을 5번 포함 (16, 17, 18, 19, 20)5
+						return new ZBlock(); // Z 모양 블록 생성 반환
+					} else if (slot < 26) { // 4번 블럭을 5번 포함 (21, 22, 23, 24, 25)5
+						return new SBlock(); // S 모양 블록 생성 반환
+					} else if (slot < 31) { // 5번 블럭을 5번 포함 (26, 27, 28, 29, 30)5
+						return new TBlock(); // T 모양 블록 생성 반환
+					} else { // 나머지는 6번 블럭 (31, 32, 33, 34, 35)
+						return new OBlock(); // O 모양 블록 생성 반환
+					}
+				case 1: //normal
+					slot = rnd.nextInt(7);
+					if (slot == 0) { // 0번 블럭을 4번 포함 (0, 1, 2, 3)
+						return new IBlock();
+					} else if (slot == 1) { // 1번 블럭
+						return new JBlock();
+					} else if (slot == 2) { // 2번 블럭
+						return new LBlock();
+					} else if (slot == 3) { // 3번 블럭
+						return new ZBlock();
+					} else if (slot == 4) { // 4번 블럭
+						return new SBlock();
+					} else if (slot == 5) { // 5번 블럭
+						return new TBlock();
+					} else { // 나머지는 6번 블럭
+						return new OBlock();
+					}
+				case 2: //hard //8 : 10 : 10 : 10 : 10 : 10 : 10  -> 4 : 5 : 5 : 5 : 5 : 5 :5
+					slot = rnd.nextInt(34); // 0부터 33사이의 난수를 생성 (총 34개 슬롯)
+					if (slot < 4) { // 0번 블럭을 4번 포함 (0, 1, 2, 3)
+						return new IBlock();
+					} else if (slot < 9) { // 1번 블럭을 5번 포함 (4, 5, 6, 7, 8)
+						return new JBlock();
+					} else if (slot < 14) { // 2번 블럭을 5번 포함 (9, 10, 11, 12, 13)
+						return new LBlock();
+					} else if (slot < 19) { // 3번 블럭을 5번 포함 (14, 15, 16, 17, 18)
+						return new ZBlock();
+					} else if (slot < 24) { // 4번 블럭을 5번 포함 (19, 20, 21, 22, 23)
+						return new SBlock();
+					} else if (slot < 29) { // 5번 블럭을 5번 포함 (24, 25, 26, 27, 28)
+						return new TBlock();
+					} else { // 나머지는 6번 블럭 (29, 30, 31, 32, 33)
+						return new OBlock();
+					}
+			}
+		}
+		else if(item == 1)
+		{
+			System.out.println(bricks);
+			if(bricks != 0 && bricks % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
+			{
+				curr_name = nextcurr_name;
+				nextcurr_name = "WeightBlock";
+				return new WeightBlock();
+			}
+			switch (mode) {
 
+				case 0: //easy
+					slot = rnd.nextInt(36); // 0부터 35사이의 난수를 생성 (총 36개 슬롯) 6 : 5 : 5 : 5 : 5 : 5 :5
+					if (slot < 6) { // 0번 블럭을 6번 포함 (0, 1, 2, 3, 4, 5) 6
+						curr_name = nextcurr_name;
+						nextcurr_name = "I";
+						return new IBlock(); // I 모양 블록 생성 반환
+					} else if (slot < 11) { // 1번 블럭을 5번 포함 (6, 7, 8, 9, 10) 5
+						curr_name = nextcurr_name;
+						nextcurr_name = "J";
+						return new JBlock(); // J 모양 블록 생성 반환
+					} else if (slot < 16) { // 2번 블럭을 5번 포함 (11, 12, 13, 14, 15)5
+						curr_name = nextcurr_name;
+						nextcurr_name = "L";
+						return new LBlock(); // L 모양 블록 생성 반환
+					} else if (slot < 21) { // 3번 블럭을 5번 포함 (16, 17, 18, 19, 20)5
+						curr_name = nextcurr_name;
+						nextcurr_name = "Z";
+						return new ZBlock(); // Z 모양 블록 생성 반환
+					} else if (slot < 26) { // 4번 블럭을 5번 포함 (21, 22, 23, 24, 25)5
+						curr_name = nextcurr_name;
+						nextcurr_name = "S";
+						return new SBlock(); // S 모양 블록 생성 반환
+					} else if (slot < 31) { // 5번 블럭을 5번 포함 (26, 27, 28, 29, 30)5
+						curr_name = nextcurr_name;
+						nextcurr_name = "T";
+						return new TBlock(); // T 모양 블록 생성 반환
+					} else { // 나머지는 6번 블럭 (31, 32, 33, 34, 35)
+						curr_name = nextcurr_name;
+						nextcurr_name = "O";
+						return new OBlock(); // O 모양 블록 생성 반환
+					}
+				case 1: //normal
+					slot = rnd.nextInt(7);
+					if (slot == 0) { // 0번 블럭을 4번 포함 (0, 1, 2, 3)
+						curr_name = nextcurr_name;
+						nextcurr_name = "I";
+						return new IBlock();
+					} else if (slot == 1) { // 1번 블럭
+						curr_name = nextcurr_name;
+						nextcurr_name = "J";
+						return new JBlock();
+					} else if (slot == 2) { // 2번 블럭
+						curr_name = nextcurr_name;
+						nextcurr_name = "L";
+						return new LBlock();
+					} else if (slot == 3) { // 3번 블럭
+						curr_name = nextcurr_name;
+						nextcurr_name = "Z";
+						return new ZBlock();
+					} else if (slot == 4) { // 4번 블럭
+						curr_name = nextcurr_name;
+						nextcurr_name = "S";
+						return new SBlock();
+					} else if (slot == 5) { // 5번 블럭
+						curr_name = nextcurr_name;
+						nextcurr_name = "T";
+						return new TBlock();
+					} else { // 나머지는 6번 블럭
+						curr_name = nextcurr_name;
+						nextcurr_name = "O";
+						return new OBlock();
+					}
+				case 2: //hard //8 : 10 : 10 : 10 : 10 : 10 : 10  -> 4 : 5 : 5 : 5 : 5 : 5 :5
+					slot = rnd.nextInt(34); // 0부터 33사이의 난수를 생성 (총 34개 슬롯)
+					if (slot < 4) { // 0번 블럭을 4번 포함 (0, 1, 2, 3)
+						curr_name = nextcurr_name;
+						nextcurr_name = "I";
+						return new IBlock();
+					} else if (slot < 9) { // 1번 블럭을 5번 포함 (4, 5, 6, 7, 8)
+						curr_name = nextcurr_name;
+						nextcurr_name = "J";
+						return new JBlock();
+					} else if (slot < 14) { // 2번 블럭을 5번 포함 (9, 10, 11, 12, 13)
+						curr_name = nextcurr_name;
+						nextcurr_name = "L";
+						return new LBlock();
+					} else if (slot < 19) { // 3번 블럭을 5번 포함 (14, 15, 16, 17, 18)
+						curr_name = nextcurr_name;
+						nextcurr_name = "Z";
+						return new ZBlock();
+					} else if (slot < 24) { // 4번 블럭을 5번 포함 (19, 20, 21, 22, 23)
+						curr_name = nextcurr_name;
+						nextcurr_name = "S";
+						return new SBlock();
+					} else if (slot < 29) { // 5번 블럭을 5번 포함 (24, 25, 26, 27, 28)
+						curr_name = nextcurr_name;
+						nextcurr_name = "T";
+						return new TBlock();
+					} else { // 나머지는 6번 블럭 (29, 30, 31, 32, 33)
+						curr_name = nextcurr_name;
+						nextcurr_name = "O";
+						return new OBlock();
+					}
+			}
 		}
 		return null;
 	}
@@ -242,6 +351,12 @@ public class Board extends JPanel {
 			for (int j = 0; j < curr.height(); j++) {
 				if (curr.getShape(i, j) != 0) { // 블록의 일부인 경우
 					if (board[y + j + 1][x + i] != 0) { // 아래 칸이 비어있지 않은 경우
+						if(curr_name.equals("WeightBlock"))
+						{
+							weightblockLock = true;
+							return true; // 무게추 블록이면 여기선 true임.
+						}
+						weightblockLock = false;
 						return false; // 이동할 수 없음
 					}
 				}
@@ -253,6 +368,13 @@ public class Board extends JPanel {
 	protected boolean canMoveLeft() {
 		// 블록을 왼쪽으로 이동할 수 있는지 확인하는 메소드
 		// 이 메소드는 블록의 왼쪽에 다른 블록이 없고, 블록이 게임 보드의 왼쪽 경계를 넘지 않는 경우에만 true를 반환합니다.
+		if(curr_name.equals("WeightBlock"))
+		{
+			if(weightblockLock)
+				return false;
+			else
+				return true;
+		}
 		for (int i = 0; i < curr.height(); i++) {
 			for (int j = 0; j < curr.width(); j++) {
 				if (curr.getShape(j, i) != 0) {
@@ -268,6 +390,16 @@ public class Board extends JPanel {
 	protected boolean canMoveRight() {
 		// 블록을 오른쪽으로 이동할 수 있는지 확인하는 메소드
 		// 블록의 오른쪽에 다른 블록이 없고, 블록이 게임 보드의 오른쪽 경계를 넘지 않는 경우에만 true를 반환합니다.
+		if(curr_name.equals("WeightBlock"))
+		{
+			if(curr_name.equals("WeightBlock"))
+			{
+				if(weightblockLock)
+					return false;
+				else
+					return true;
+			}
+		}
 		for (int i = 0; i < curr.height(); i++) {
 			for (int j = 0; j < curr.width(); j++) {
 				if (curr.getShape(j, i) != 0) {
@@ -305,12 +437,37 @@ public class Board extends JPanel {
 	protected void moveDown() {
 		System.out.println("mode : " + mode);
 		eraseCurr(); // 현재 블록의 위치를 한칸 내리기 위해 게임 보드에서 지웁니다.
-		if (canMoveDown()) { // 아래로 이동할 수 있는 경우
+		if(curr_name.equals("WeightBlock"))
+		{
+			System.out.println("내려갈 수 있나?");
+			if(canMoveDown())
+			{
+				y++;
+				for(int i=0;i<4;++i) {
+					board[y+1][x+i] = 0;
+					System.out.println(String.format("%d, %d",x+i, y-1));
+				}
+			}
+			else {
+				placeBlock(); // 현재 위치에 블록을 고정시킵니다.
+				checkLines(); // 완성된 라인이 있는지 확인합니다.
+				checkLines(); // 완성된 라인이 있는지 확인합니다.
+				curr = nextcurr; // 다음블록을 현재 블록으로 설정합니다.
+				nextcurr = getRandomBlock(); // 새로운 블록을 무작위로 가져옵니다.
+				x = 3; // 새 블록의 x좌표를 시작 x 좌표를 설정합니다.
+				y = 0; // 새 블록의 y좌표를 시작 y 좌표를 설정합니다.
+				if (!canMoveDown()) { // 새 블록이 움직일 수 없는 경우 (게임 오버)
+					GameOver();
+				}
+			}
+
+		}
+
+		else if (canMoveDown()) { // 아래로 이동할 수 있는 경우
 			y++; // 블록을 아래로 이동
 			scores += point;
-
-
-		} else { // 아래로 이동할 수 없는 경우 (다른 블록에 닿거나 바닥에 닿은 경우)
+		}
+		else { // 아래로 이동할 수 없는 경우 (다른 블록에 닿거나 바닥에 닿은 경우)
 			placeBlock(); // 현재 위치에 블록을 고정시킵니다.
 			checkLines(); // 완성된 라인이 있는지 확인합니다.
 			checkLines(); // 완성된 라인이 있는지 확인합니다.
@@ -320,8 +477,6 @@ public class Board extends JPanel {
 			y = 0; // 새 블록의 y좌표를 시작 y 좌표를 설정합니다.
 			if (!canMoveDown()) { // 새 블록이 움직일 수 없는 경우 (게임 오버)
 				GameOver();
-				
-
 			}
 		}
 		placeBlock(); // 게임 보드에 현재 블록의 새 위치를 표시합니다.
@@ -531,81 +686,163 @@ public class Board extends JPanel {
 	public void GameOver() {
 		timer.stop(); // 타이머를 멈춥니다.
 		gameOver = true;
-		Main.normalScoreBoard1.update();
-		switchToScreen(Main.normalScoreBoard1);
-		int response = JOptionPane.showConfirmDialog(this, "점수를 저장하시겠습니까?", "Game Over", JOptionPane.YES_NO_OPTION);
+		if(item == 0) {
+			Main.classicScoreBoard1.update();
+			switchToScreen(Main.classicScoreBoard1);
+			int response = JOptionPane.showConfirmDialog(this, "점수를 저장하시겠습니까?", "Game Over", JOptionPane.YES_NO_OPTION);
 
-		if (response == JOptionPane.YES_OPTION) {
-			//점수 저장 구현 순위, 이름, 점수, 모드
-			name = JOptionPane.showInputDialog(this, "이름을 입력하세요:"); // 이름입력하는 대화상자
-			//정상적으로 이름을 입력했다면
-			if (name != null && !name.isEmpty()) {
-				switchToScreen(Main.mainMenu1);
-
-				JSONArray scoreList = new JSONArray();
-				JSONParser parser = new JSONParser();
-
-				try {
-					FileReader reader = new FileReader("Tetris_game/src/NormalScoreData.json");
-					Object obj = parser.parse(reader);
-					scoreList = (JSONArray) obj;
-					reader.close();
-				} catch (Exception e) {
-					// 파일이 없거나 읽을 수 없을 때 예외 처리
-				}
-
-				for(Object item : scoreList) // 최신 상태임을 나타내는 키값 recent에 대항하는 값을 기존의 모든 object들에 대하여 0으로 바꿔줌.
-				{
-					JSONObject gameData = (JSONObject) item;
-					gameData.put("recent", 0);
-				}
-
-				// 새 데이터 추가
-				JSONObject scoreData = new JSONObject();
-				scoreData.put("mode", mode);
-				scoreData.put("scores", scores); // 'scores' 변수의 실제 타입에 따라 적절히 처리해야 함
-				scoreData.put("name", name);
-				scoreData.put("item", item);
-				scoreData.put("recent", 1); // 가장 최근에 끝난 게임임을 알려주는 심볼
-				scoreList.add(scoreData);
-
-				// 파일에 새 데이터 쓰기
-				try (FileWriter file = new FileWriter("Tetris_game/src/NormalScoreData.json")) {
-					file.write(scoreList.toJSONString());
-					file.flush();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				System.out.println(name);
-				System.out.println(scores);
-				System.out.println(mode);
-
-			} else // 빈칸을 입력했거나, 이름입력대화상자에서 취소 눌렀을 때
-			{
-				if(Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
+			if (response == JOptionPane.YES_OPTION) {
+				//점수 저장 구현 순위, 이름, 점수, 모드
+				name = JOptionPane.showInputDialog(this, "이름을 입력하세요:"); // 이름입력하는 대화상자
+				//정상적으로 이름을 입력했다면
+				if (name != null && !name.isEmpty()) {
 					switchToScreen(Main.mainMenu1);
-				else if(Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
-					switchToScreen(Main.mainMenu2);
-				else if(Main.SettingObject.get("Screen").toString().equals("960"))// mainmenu 3으로
-					switchToScreen(Main.mainMenu3);
-				else
-					System.out.println("에러 발생.");
-			}
 
-		} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
-			if ( Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
-				switchToScreen(Main.mainMenu1);
-			else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
-				switchToScreen(Main.mainMenu2);
-			else if (Main.SettingObject.get("Screen").toString().equals("960")) // mainmenu 3으로
-				switchToScreen(Main.mainMenu3);
-			else {
-				System.out.println("에러 발생.");
-				System.out.println(Main.SettingObject.get("Screen"));
+					JSONArray scoreList = new JSONArray();
+					JSONParser parser = new JSONParser();
+
+					try {
+						FileReader reader = new FileReader("Tetris_game/src/ClassicScoreData.json");
+						Object obj = parser.parse(reader);
+						scoreList = (JSONArray) obj;
+						reader.close();
+					} catch (Exception e) {
+						// 파일이 없거나 읽을 수 없을 때 예외 처리
+					}
+
+					for (Object item : scoreList) // 최신 상태임을 나타내는 키값 recent에 대항하는 값을 기존의 모든 object들에 대하여 0으로 바꿔줌.
+					{
+						JSONObject gameData = (JSONObject) item;
+						gameData.put("recent", 0);
+					}
+
+					// 새 데이터 추가
+					JSONObject scoreData = new JSONObject();
+					scoreData.put("mode", mode);
+					scoreData.put("scores", scores); // 'scores' 변수의 실제 타입에 따라 적절히 처리해야 함
+					scoreData.put("name", name);
+					scoreData.put("item", item);
+					scoreData.put("recent", 1); // 가장 최근에 끝난 게임임을 알려주는 심볼
+					scoreList.add(scoreData);
+
+					Main.classicScoreBoard1.update();
+
+					// 파일에 새 데이터 쓰기
+					try (FileWriter file = new FileWriter("Tetris_game/src/ClassicScoreData.json")) {
+						file.write(scoreList.toJSONString());
+						file.flush();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					System.out.println(name);
+					System.out.println(scores);
+					System.out.println(mode);
+
+				} else // 빈칸을 입력했거나, 이름입력대화상자에서 취소 눌렀을 때
+				{
+					if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
+						switchToScreen(Main.mainMenu1);
+					else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
+						switchToScreen(Main.mainMenu2);
+					else if (Main.SettingObject.get("Screen").toString().equals("960"))// mainmenu 3으로
+						switchToScreen(Main.mainMenu3);
+					else
+						System.out.println("에러 발생.");
+				}
+
+			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
+				if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
+					switchToScreen(Main.mainMenu1);
+				else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
+					switchToScreen(Main.mainMenu2);
+				else if (Main.SettingObject.get("Screen").toString().equals("960")) // mainmenu 3으로
+					switchToScreen(Main.mainMenu3);
+				else {
+					System.out.println("에러 발생.");
+					System.out.println(Main.SettingObject.get("Screen"));
+				}
 			}
 		}
+		else if(item == 1)
+		{
+			Main.itemScoreBoard1.update();
+			switchToScreen(Main.itemScoreBoard1);
+			int response = JOptionPane.showConfirmDialog(this, "점수를 저장하시겠습니까?", "Game Over", JOptionPane.YES_NO_OPTION);
 
+			if (response == JOptionPane.YES_OPTION) {
+				//점수 저장 구현 순위, 이름, 점수, 모드
+				name = JOptionPane.showInputDialog(this, "이름을 입력하세요:"); // 이름입력하는 대화상자
+				//정상적으로 이름을 입력했다면
+				if (name != null && !name.isEmpty()) {
+					switchToScreen(Main.mainMenu1);
+
+					JSONArray scoreList = new JSONArray();
+					JSONParser parser = new JSONParser();
+
+					try {
+						FileReader reader = new FileReader("Tetris_game/src/ItemScoreData.json");
+						Object obj = parser.parse(reader);
+						scoreList = (JSONArray) obj;
+						reader.close();
+					} catch (Exception e) {
+						// 파일이 없거나 읽을 수 없을 때 예외 처리
+					}
+
+					for (Object item : scoreList) // 최신 상태임을 나타내는 키값 recent에 대항하는 값을 기존의 모든 object들에 대하여 0으로 바꿔줌.
+					{
+						JSONObject gameData = (JSONObject) item;
+						gameData.put("recent", 0);
+					}
+
+					// 새 데이터 추가
+					JSONObject scoreData = new JSONObject();
+					scoreData.put("mode", mode);
+					scoreData.put("scores", scores); // 'scores' 변수의 실제 타입에 따라 적절히 처리해야 함
+					scoreData.put("name", name);
+					scoreData.put("item", item);
+					scoreData.put("recent", 1); // 가장 최근에 끝난 게임임을 알려주는 심볼
+					scoreList.add(scoreData);
+
+					Main.classicScoreBoard1.update();
+
+					// 파일에 새 데이터 쓰기
+					try (FileWriter file = new FileWriter("Tetris_game/src/ItemScoreData.json")) {
+						file.write(scoreList.toJSONString());
+						file.flush();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					System.out.println(name);
+					System.out.println(scores);
+					System.out.println(mode);
+
+				} else // 빈칸을 입력했거나, 이름입력대화상자에서 취소 눌렀을 때
+				{
+					if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
+						switchToScreen(Main.mainMenu1);
+					else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
+						switchToScreen(Main.mainMenu2);
+					else if (Main.SettingObject.get("Screen").toString().equals("960"))// mainmenu 3으로
+						switchToScreen(Main.mainMenu3);
+					else
+						System.out.println("에러 발생.");
+				}
+
+			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
+				if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
+					switchToScreen(Main.mainMenu1);
+				else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
+					switchToScreen(Main.mainMenu2);
+				else if (Main.SettingObject.get("Screen").toString().equals("960")) // mainmenu 3으로
+					switchToScreen(Main.mainMenu3);
+				else {
+					System.out.println("에러 발생.");
+					System.out.println(Main.SettingObject.get("Screen"));
+				}
+			}
+		}
 		GameInit();
 	}
 
@@ -656,9 +893,21 @@ public class Board extends JPanel {
 					break;
 				case KeyEvent.VK_ENTER:
 					eraseCurr();
-					while (canMoveDown()) {
-						y++;
-						scores += point;
+					if(curr_name.equals("WeightBlock"))
+					{
+						while (canMoveDown()) {
+							y++;
+							for(int i=0;i<4;++i) {
+								board[y+1][x+i] = 0;
+							}
+						}
+					}
+					else
+					{
+						while (canMoveDown()) {
+							y++;
+							scores += point;
+						}
 					}
 					placeBlock();
 					checkLines();

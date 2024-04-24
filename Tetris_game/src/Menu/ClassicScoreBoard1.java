@@ -14,16 +14,17 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class ItemScoreBoard1 extends JPanel implements KeyListener {
+public class ClassicScoreBoard1 extends JPanel implements KeyListener {
     private JLabel keyMessage;
+    private JPanel scoreTable;
     private Timer messageTimer;
     private JSONArray sortedScoreArray;
     private JSONParser scoreParser;
 
-    public ItemScoreBoard1() {
+    public ClassicScoreBoard1() {
         this.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
         this.setLayout(new BorderLayout());
-        JLabel title = new JLabel("Item Score Board");
+        JLabel title = new JLabel("Normal Score Board");
         title.setFont(new Font("Arial", 1, Main.SCREEN_WIDTH[0] / 40));
         title.setForeground(Color.BLACK);
         title.setBounds(Main.SCREEN_WIDTH[0] / 2 - 200, Main.SCREEN_HEIGHT[0] / 20, 400, 50);
@@ -34,7 +35,88 @@ public class ItemScoreBoard1 extends JPanel implements KeyListener {
         this.sortedScoreArray = new JSONArray();
 
 
-        try (FileReader reader = new FileReader(String.format(Main.path) + "/Tetris_game/src/ItemScoreData.json")) {
+        try (FileReader reader = new FileReader(String.format(Main.path) + "/Tetris_game/src/ClassicScoreData.json")) {
+            JSONArray scoreArray = (JSONArray) scoreParser.parse(reader);
+            List<JSONObject> scoreList = new ArrayList<>();
+            for (Object item : scoreArray) {
+                scoreList.add((JSONObject) item);
+            }
+
+            scoreList.sort((a, b) -> {
+                long valA = (long) a.get("scores");
+                long valB = (long) b.get("scores");
+                return Long.compare(valB, valA);
+            });
+
+            for (int i = 0; i < 10; i++) {
+                if(i >= scoreList.size())
+                {
+                    JSONObject temp = new JSONObject();
+                    temp.put("mode", 0);
+                    temp.put("scores", 0);
+                    temp.put("item", 0);
+                    temp.put("name", "Default Value");
+                    sortedScoreArray.add(temp);
+                }
+                else
+                    sortedScoreArray.add(scoreList.get(i));
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        scoreTable = new JPanel(new GridLayout(sortedScoreArray.size() + 1, 5, 50, 20));
+        scoreTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.add(scoreTable, BorderLayout.SOUTH);
+        // 컬럼 헤더 추가
+        String[] columnNames = {"Rank", "Name", "Mode", "Difficulty" ,"Score"};
+        for (String columnName : columnNames) {
+            JLabel headerLabel = new JLabel(columnName, SwingConstants.CENTER);
+            headerLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            scoreTable.add(headerLabel);
+        }
+
+        // 데이터 행 추가
+        for (int i = 0; i < sortedScoreArray.size(); i++) {
+            JSONObject score = (JSONObject) sortedScoreArray.get(i);
+            scoreTable.add(new JLabel(String.valueOf(i + 1), SwingConstants.CENTER));
+            scoreTable.add(new JLabel((String) score.get("name"), SwingConstants.CENTER));
+            scoreTable.add(new JLabel(String.valueOf(score.get("item")).equals("1") ? "Item" : "Normal", SwingConstants.CENTER));
+            scoreTable.add(new JLabel(String.valueOf(score.get("mode")).equals("0") ? "Easy" : String.valueOf(score.get("mode")).equals("1") ? "Normal" : "Hard" , SwingConstants.CENTER));
+            scoreTable.add(new JLabel(String.valueOf(score.get("scores")), SwingConstants.CENTER));
+        }
+
+        this.keyMessage = new JLabel(" ");
+        this.keyMessage.setFont(new Font("Arial", 1, Main.SCREEN_WIDTH[0] / 30));
+        this.keyMessage.setForeground(Color.BLACK);
+        this.add(this.keyMessage, BorderLayout.CENTER);
+        this.messageTimer = new Timer(700, (e) -> {
+            this.keyMessage.setVisible(false);
+        });
+        this.messageTimer.setRepeats(false);
+        this.addKeyListener(this);
+        this.setFocusable(true);
+        this.setVisible(true);
+    }
+
+    public void update()
+    {
+        this.removeAll();
+
+        this.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
+        this.setLayout(new BorderLayout());
+        JLabel title = new JLabel("Classic Score Board");
+        title.setFont(new Font("Arial", 1, Main.SCREEN_WIDTH[0] / 40));
+        title.setForeground(Color.BLACK);
+        title.setBounds(Main.SCREEN_WIDTH[0] / 2 - 200, Main.SCREEN_HEIGHT[0] / 20, 400, 50);
+        title.setHorizontalAlignment(0);
+        this.add(title, BorderLayout.NORTH);
+
+        this.scoreParser = new JSONParser();
+        this.sortedScoreArray = new JSONArray();
+
+
+        try (FileReader reader = new FileReader(String.format(Main.path) + "/Tetris_game/src/ClassicScoreData.json")) {
             JSONArray scoreArray = (JSONArray) scoreParser.parse(reader);
             List<JSONObject> scoreList = new ArrayList<>();
             for (Object item : scoreArray) {
@@ -65,7 +147,7 @@ public class ItemScoreBoard1 extends JPanel implements KeyListener {
             e.printStackTrace();
         }
 
-        JPanel scoreTable = new JPanel(new GridLayout(sortedScoreArray.size() + 1, 5, 50, 20));
+        scoreTable = new JPanel(new GridLayout(sortedScoreArray.size() + 1, 5, 50, 20));
         scoreTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         this.add(scoreTable, BorderLayout.SOUTH);
         // 컬럼 헤더 추가
@@ -82,108 +164,17 @@ public class ItemScoreBoard1 extends JPanel implements KeyListener {
             if(String.valueOf(score.get("recent")).equals("0")) {
                 scoreTable.add(new JLabel(String.valueOf(i + 1), SwingConstants.CENTER));
                 scoreTable.add(new JLabel((String) score.get("name"), SwingConstants.CENTER));
-                scoreTable.add(new JLabel(String.valueOf(score.get("item")).equals("1") ? "Item" : "Normal", SwingConstants.CENTER));
+                scoreTable.add(new JLabel(String.valueOf(score.get("item")).equals("1") ? "Item" : "Classic", SwingConstants.CENTER));
                 scoreTable.add(new JLabel(String.valueOf(score.get("mode")).equals("0") ? "Easy" : String.valueOf(score.get("mode")).equals("1") ? "Normal" : "Hard", SwingConstants.CENTER));
                 scoreTable.add(new JLabel(String.valueOf(score.get("scores")), SwingConstants.CENTER));
             }
             else
             {
-                scoreTable.add(new JLabel("*" + String.valueOf(i + 1) + "*", SwingConstants.CENTER));
-                scoreTable.add(new JLabel("*" + ((String) score.get("name")) +"*", SwingConstants.CENTER));
-                scoreTable.add(new JLabel("*" + (String.valueOf(score.get("item")).equals("1") ? "Item" : "Normal") + "*", SwingConstants.CENTER));
-                scoreTable.add(new JLabel("*" + (String.valueOf(score.get("mode")).equals("0") ? "Easy" : String.valueOf(score.get("mode")).equals("1") ? "Normal" : "Hard") +"*", SwingConstants.CENTER));
-                scoreTable.add(new JLabel("*" + (String.valueOf(score.get("scores"))) +"*", SwingConstants.CENTER));
-            }
-        }
-
-        this.keyMessage = new JLabel(" ");
-        this.keyMessage.setFont(new Font("Arial", 1, Main.SCREEN_WIDTH[0] / 30));
-        this.keyMessage.setForeground(Color.BLACK);
-        this.add(this.keyMessage, BorderLayout.CENTER);
-        this.messageTimer = new Timer(700, (e) -> {
-            this.keyMessage.setVisible(false);
-        });
-        this.messageTimer.setRepeats(false);
-        this.addKeyListener(this);
-        this.setFocusable(true);
-        this.setVisible(true);
-    }
-
-    public void update()
-    {
-        this.removeAll();
-
-        this.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
-        this.setLayout(new BorderLayout());
-        JLabel title = new JLabel("Item Score Board");
-        title.setFont(new Font("Arial", 1, Main.SCREEN_WIDTH[0] / 40));
-        title.setForeground(Color.BLACK);
-        title.setBounds(Main.SCREEN_WIDTH[0] / 2 - 200, Main.SCREEN_HEIGHT[0] / 20, 400, 50);
-        title.setHorizontalAlignment(0);
-        this.add(title, BorderLayout.NORTH);
-
-        this.scoreParser = new JSONParser();
-        this.sortedScoreArray = new JSONArray();
-
-
-        try (FileReader reader = new FileReader(String.format(Main.path) + "/Tetris_game/src/ItemScoreData.json")) {
-            JSONArray scoreArray = (JSONArray) scoreParser.parse(reader);
-            List<JSONObject> scoreList = new ArrayList<>();
-            for (Object item : scoreArray) {
-                scoreList.add((JSONObject) item);
-            }
-
-            scoreList.sort((a, b) -> {
-                long valA = (long) a.get("scores");
-                long valB = (long) b.get("scores");
-                return Long.compare(valB, valA);
-            });
-
-            for (int i = 0; i < 10; i++) {
-                if(i >= scoreList.size())
-                {
-                    JSONObject temp = new JSONObject();
-                    temp.put("mode", 0);
-                    temp.put("scores", 0);
-                    temp.put("item", 1);
-                    temp.put("name", "Default Value");
-                    sortedScoreArray.add(temp);
-                }
-                else
-                    sortedScoreArray.add(scoreList.get(i));
-            }
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-
-        JPanel scoreTable = new JPanel(new GridLayout(sortedScoreArray.size() + 1, 5, 50, 20));
-        scoreTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        this.add(scoreTable, BorderLayout.SOUTH);
-        // 컬럼 헤더 추가
-        String[] columnNames = {"Rank", "Name", "Mode", "Difficulty" ,"Score"};
-        for (String columnName : columnNames) {
-            JLabel headerLabel = new JLabel(columnName, SwingConstants.CENTER);
-            headerLabel.setFont(new Font("Arial", Font.BOLD, 20));
-            scoreTable.add(headerLabel);
-        }
-
-        // 데이터 행 추가
-        for (int i = 0; i < sortedScoreArray.size(); i++) {
-            JSONObject score = (JSONObject) sortedScoreArray.get(i);
-            if(String.valueOf(score.get("recent")).equals("1")) {
                 scoreTable.add(new JLabel("*" + String.valueOf(i + 1) + "*", SwingConstants.CENTER));
                 scoreTable.add(new JLabel("*" + ((String) score.get("name")) +"*", SwingConstants.CENTER));
                 scoreTable.add(new JLabel("*" + (String.valueOf(score.get("item")).equals("1") ? "Item" : "Classic") + "*", SwingConstants.CENTER));
                 scoreTable.add(new JLabel("*" + (String.valueOf(score.get("mode")).equals("0") ? "Easy" : String.valueOf(score.get("mode")).equals("1") ? "Normal" : "Hard") +"*", SwingConstants.CENTER));
                 scoreTable.add(new JLabel("*" + (String.valueOf(score.get("scores"))) +"*", SwingConstants.CENTER));
-            }
-            else
-            {
-                scoreTable.add(new JLabel(String.valueOf(i + 1), SwingConstants.CENTER));
-                scoreTable.add(new JLabel((String) score.get("name"), SwingConstants.CENTER));
-                scoreTable.add(new JLabel(String.valueOf(score.get("item")).equals("1") ? "Item" : "Classic", SwingConstants.CENTER));
-                scoreTable.add(new JLabel(String.valueOf(score.get("mode")).equals("0") ? "Easy" : String.valueOf(score.get("mode")).equals("1") ? "Normal" : "Hard", SwingConstants.CENTER));
-                scoreTable.add(new JLabel(String.valueOf(score.get("scores")), SwingConstants.CENTER));
             }
         }
 
@@ -202,7 +193,7 @@ public class ItemScoreBoard1 extends JPanel implements KeyListener {
 
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        if (keyCode == ((Number)Main.SettingObject.get("K_ENTER")).intValue()) {
+        if(keyCode == ((Number)(Main.SettingObject.get("K_ENTER"))).intValue()) {
             this.switchToScreen(Main.scoreBoardMenu1);
         } else {
             this.showTemporaryMessage("<html>Invalid Key Input. <br>If you want to exit, Press Enter</html>");

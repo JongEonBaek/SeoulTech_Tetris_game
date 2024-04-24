@@ -12,7 +12,7 @@ public class ScoreBoardMenu1 extends JPanel implements KeyListener {
     private int currentIndex = 0; // 현재 선택된 메뉴 인덱스
     private final String cursorSymbol = "> "; // 현재 선택된 메뉴룰 따라갈 커서
     private final String nonSelected = "  "; // 커서가 있을 위치
-    private final String[] labels = {"Normal mode", "Item mode", "Normal Score Reset", "Item Score Reset", "Back"}; // 메인 메뉴에 있을 서브 메뉴들.
+    private final String[] labels = {"Classic mode", "Item mode", "Classic Score Reset", "Item Score Reset", "Back"}; // 메인 메뉴에 있을 서브 메뉴들.
     java.util.List<JLabel> menuItems;
     public final JLabel mainLabel;
     private JLabel keyMessage;
@@ -98,9 +98,9 @@ public class ScoreBoardMenu1 extends JPanel implements KeyListener {
     private void activateMenuItem(int index) {
         switch (index) {
             case 0: // Start
-                System.out.println("Normal Mode ScoreBoard");
-                Main.normalScoreBoard1.update();
-                switchToScreen(Main.normalScoreBoard1);
+                System.out.println("Classic Mode ScoreBoard");
+                Main.classicScoreBoard1.update();
+                switchToScreen(Main.classicScoreBoard1);
 
 
                 break;
@@ -111,8 +111,8 @@ public class ScoreBoardMenu1 extends JPanel implements KeyListener {
 
                 break;
             case 2:
-                System.out.println("Normal ScoreBoard Reset");
-                String normalfile = String.format(Main.path) + "/Tetris_game/src/NormalScoreData.json"; // JSON 파일 경로 지정
+                System.out.println("Classic ScoreBoard Reset");
+                String normalfile = String.format(Main.path) + "/Tetris_game/src/ClassicScoreData.json"; // JSON 파일 경로 지정
 
                 try (FileWriter fileWriter = new FileWriter(normalfile, false)) {
                     // 파일에 빈 JSONArray '[]'를 쓰기

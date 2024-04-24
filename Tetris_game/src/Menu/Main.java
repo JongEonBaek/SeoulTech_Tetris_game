@@ -41,10 +41,10 @@ public class Main {
     public static KeyControl1 keyControl1;
     public static KeyControl2 keyControl2;
     public static KeyControl3 keyControl3;
-    public static NormalScoreBoard1 normalScoreBoard1;
+    public static ClassicScoreBoard1 classicScoreBoard1;
     public static ItemScoreBoard1 itemScoreBoard1;
-    public static NormalScoreBoard2 normalscoreBoard2;
-    public static NormalScoreBoard3 normalScoreBoard3;
+    public static ClassicScoreBoard2 classicscoreBoard2;
+    public static ClassicScoreBoard3 classicScoreBoard3;
     public static ScoreBoardMenu1 scoreBoardMenu1;
 
 
@@ -137,12 +137,12 @@ public class Main {
         keyControl3 = new KeyControl3();
         keyControl3.setName("Control3");
 
-        normalScoreBoard1 = new NormalScoreBoard1();
-        normalScoreBoard1.setName("NormalScoreBoard1");
-        normalscoreBoard2 = new NormalScoreBoard2();
-        normalscoreBoard2.setName("NormalScoreBoard2");
-        normalScoreBoard3 = new NormalScoreBoard3();
-        normalScoreBoard3.setName("NormalScoreBoard3");
+        classicScoreBoard1 = new ClassicScoreBoard1();
+        classicScoreBoard1.setName("NormalScoreBoard1");
+        classicscoreBoard2 = new ClassicScoreBoard2();
+        classicscoreBoard2.setName("NormalScoreBoard2");
+        classicScoreBoard3 = new ClassicScoreBoard3();
+        classicScoreBoard3.setName("NormalScoreBoard3");
 
         itemScoreBoard1 = new ItemScoreBoard1();
         itemScoreBoard1.setName("ItemScoreBoard1");
@@ -175,9 +175,9 @@ public class Main {
         mainPanel.add(keyControl2, "Control2");
         mainPanel.add(keyControl3, "Control3");
 
-        mainPanel.add(normalScoreBoard1, "NormalScoreBoard1");
-        mainPanel.add(normalscoreBoard2, "NormalScoreBoard2");
-        mainPanel.add(normalScoreBoard3, "NormalScoreBoard3");
+        mainPanel.add(classicScoreBoard1, "NormalScoreBoard1");
+        mainPanel.add(classicscoreBoard2, "NormalScoreBoard2");
+        mainPanel.add(classicScoreBoard3, "NormalScoreBoard3");
 
         mainPanel.add(itemScoreBoard1, "ItemScoreBoard1");
 

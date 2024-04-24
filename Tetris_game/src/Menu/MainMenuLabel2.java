@@ -108,7 +108,7 @@ public class MainMenuLabel2 extends JPanel implements KeyListener {
                 break;
             case 2:
                 System.out.println("ScoreBoard Selected");
-                switchToScreen(Main.normalscoreBoard2);
+                switchToScreen(Main.classicscoreBoard2);
                 break;
             case 3: // Exits
                 System.out.println("Exit Selected");
