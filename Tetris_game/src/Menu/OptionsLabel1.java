@@ -9,13 +9,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
 
+import static Menu.Main.SettingObject;
 import static Menu.Main.isColorBlindnessMode;
 
 public class OptionsLabel1 extends JPanel implements KeyListener {
     private int currentIndex = 0; // 현재 선택된 메뉴 인덱스
     private final String cursorSymbol = "> "; // 현재 선택된 메뉴룰 따라갈 커서
     private final String nonSelected = "  "; // 커서가 있을 위치
-    private final String[] labels = {"Main Menu", String.format("Screen : %d x %d",  Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]), "Controls", "Color Blindness Mode", "Reset"}; // 메인 메뉴에 있을 서브 메뉴들.
+    private final String[] labels = {"Main Menu", String.format("Screen : %d x %d",  Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]),
+            "Controls", String.format("Color Blindness Mode : %s", SettingObject.get("color_blind")).toString(), "Reset"}; // 메인 메뉴에 있을 서브 메뉴들.
     java.util.List<JLabel> menuItems;
     public final JLabel optionLabel1;
 
@@ -89,11 +91,15 @@ public class OptionsLabel1 extends JPanel implements KeyListener {
         else if(keyCode == ((Number)(Main.SettingObject.get("K_DOWN"))).intValue())
             currentIndex = (currentIndex + 1) % menuItems.size();
         else if(keyCode == ((Number)(Main.SettingObject.get("K_ENTER"))).intValue())
+        {
             activateMenuItem(currentIndex);
+            labels[3] = String.format("Color Blindness Mode : %s", SettingObject.get("color_blind")).toString();
+        }
         else
             showTemporaryMessage(String.format("<html>Invalid Key Input. <br>Please press %s, %s, Enter</html>",
                     KeyEvent.getKeyText(((Number)Main.SettingObject.get("K_UP")).intValue()),
                     KeyEvent.getKeyText(((Number)Main.SettingObject.get("K_DOWN")).intValue())));
+
         updateMenuDisplay();
     }
 
@@ -120,9 +126,21 @@ public class OptionsLabel1 extends JPanel implements KeyListener {
                 switchToScreen(Main.keyControl1);
                 break;
             case 3:
-                isColorBlindnessMode = !isColorBlindnessMode; // 색맹 모드 토글
+                if(SettingObject.get("color_blind").toString().equals("On")){
+                    SettingObject.put("color_blind", "Off");
+                    isColorBlindnessMode = false; // 색맹 모드 토글
+                }
+                else if(SettingObject.get("color_blind").toString().equals("Off"))
+                {
+                    SettingObject.put("color_blind", "On");
+                    isColorBlindnessMode = true; // 색맹 모드 토글
+                }
+                else {
+                    System.out.println("EORORROROROROROROROOR");
+                }
                 // isColorBlindnessMode = isColorBlindnessMode; // 상태 저장
                 System.out.println("Color Blindness Mode: " + (isColorBlindnessMode ? "Enabled" : "Disabled"));
+                //Main.SettingObject.put(Main.currentChangingKey, keyCode);
                 Board.setColorBlindMode(isColorBlindnessMode);
                 break;
             case 4:
@@ -139,7 +157,7 @@ public class OptionsLabel1 extends JPanel implements KeyListener {
         JLabel menuItem = new JLabel(text);
         menuItem.setFont(new Font("Arial", Font.BOLD, Main.SCREEN_HEIGHT[0] / 24)); // 폰트 설정
         menuItem.setForeground(Color.BLACK); // 텍스트 색상 설정
-        menuItem.setBounds((Main.SCREEN_HEIGHT[0] / 24) + Main.SCREEN_HEIGHT[0] / 72, y, 400, Main.SCREEN_HEIGHT[0] / 24); // 위치와 크기 설정
+        menuItem.setBounds((Main.SCREEN_HEIGHT[0] / 24) + Main.SCREEN_HEIGHT[0] / 72, y, 500, Main.SCREEN_HEIGHT[0] / 24); // 위치와 크기 설정
         menuItems.add(menuItem);
         optionLabel1.add(menuItem);
     }
