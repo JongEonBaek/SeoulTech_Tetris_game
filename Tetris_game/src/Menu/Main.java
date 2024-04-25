@@ -20,8 +20,8 @@ public class Main {
 
     public static JPanel mainPanel;
     public static CardLayout cardLayout;
-    public static final int SCREEN_WIDTH[] = {1280, 460, 552, 368};
-    public static final int SCREEN_HEIGHT[] = {720, 740, 888, 592};
+    public static final int SCREEN_WIDTH[] = {1280, 460, 517, 368};
+    public static final int SCREEN_HEIGHT[] = {720, 740, 814, 592};
     public static MainMenuLabel1 mainMenu1;
     public static OptionsLabel1 optionMenu1;
     public static GameModeLabel1 gameMode1;
@@ -115,11 +115,11 @@ public class Main {
         gamePanel2 = new Board2();
         gamePanel2.setSize(SCREEN_WIDTH[2], SCREEN_HEIGHT[2]);
         gamePanel2.setVisible(true);
-        gamePanel2.setName("game");
+        gamePanel2.setName("game2");
         gamePanel3 = new Board3();
         gamePanel3.setSize(SCREEN_WIDTH[3], SCREEN_HEIGHT[3]);
         gamePanel3.setVisible(true);
-        gamePanel3.setName("game");
+        gamePanel3.setName("game3");
 
 
 
@@ -152,6 +152,8 @@ public class Main {
 
 
         mainPanel.add(gamePanel, "game");
+        mainPanel.add(gamePanel2, "game2");
+        mainPanel.add(gamePanel3, "game3");
 
         mainPanel.add(keyControl1, "Control1");
 

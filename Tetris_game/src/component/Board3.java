@@ -81,7 +81,7 @@ public class Board3 extends JPanel {
 				BorderFactory.createLineBorder(Color.DARK_GRAY, 5)); // 복합 테두리 생성
 		pane.setBorder(border); // 텍스트 패널에 테두리를 설정
 		Border innerPadding = new EmptyBorder(0, 0, 0, 0); // 상단, 왼쪽, 하단, 오른쪽 여백 설정
-		pane.setPreferredSize(new Dimension(Main.SCREEN_WIDTH[3]/2 -10, Main.SCREEN_HEIGHT[3])); // 가로 300, 세로 200의 크기로 설정
+		pane.setPreferredSize(new Dimension(Main.SCREEN_WIDTH[3]/2 -10, Main.SCREEN_HEIGHT[3] -50)); // 가로 300, 세로 200의 크기로 설정
 
 
 		// 기존 복합 테두리와 내부 여백을 결합한 새로운 복합 테두리 생성
@@ -96,7 +96,7 @@ public class Board3 extends JPanel {
 
 		//Document default style.
 		styleSet = new SimpleAttributeSet(); // 스타일 설정을 위한 객체 생성
-		StyleConstants.setFontSize(styleSet, 20); // 폰트 크기를 18로 설정
+		StyleConstants.setFontSize(styleSet, 18); // 폰트 크기를 18로 설정
 		StyleConstants.setFontFamily(styleSet, "consolas");// 폰트 종류를 mac은 Courier로 설정, window는 consolas로 설정
 		StyleConstants.setBold(styleSet, true); // 폰트를 굵게 설정
 		StyleConstants.setForeground(styleSet, Color.WHITE); // 폰트 색상을 흰색으로 설정
@@ -602,7 +602,7 @@ public class Board3 extends JPanel {
 		nextpane.setBorder(border); // 텍스트 패널에 테두리를 설정
 
 		Border innerPadding = new EmptyBorder(0, 0, 0, 0); // 상단, 왼쪽, 하단, 오른쪽 여백 설정
-		nextpane.setPreferredSize(new Dimension(Main.SCREEN_WIDTH[3]/2 - 20, Main.SCREEN_HEIGHT[3])); // 가로 300, 세로 200의 크기로 설정
+		nextpane.setPreferredSize(new Dimension(Main.SCREEN_WIDTH[3]/2 - 20, Main.SCREEN_HEIGHT[3] - 50)); // 가로 300, 세로 200의 크기로 설정
 		// 기존 복합 테두리와 내부 여백을 결합한 새로운 복합 테두리 생성
 		CompoundBorder newBorder = new CompoundBorder(border, innerPadding);
 		// 텍스트 패널에 새로운 테두리 설정
@@ -879,45 +879,13 @@ public class Board3 extends JPanel {
 
 				} else // 빈칸을 입력했거나, 이름입력대화상자에서 취소 눌렀을 때
 				{
-					if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else if (Main.SettingObject.get("Screen").toString().equals("960"))// mainmenu 3으로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[2], Main.SCREEN_HEIGHT[2]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else
-						System.out.println("에러 발생.");
-				}
-
-			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
-				if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
-				{
 					Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
 					switchToScreen(Main.mainMenu1);
 				}
-				else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
-				{
-					Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
-					switchToScreen(Main.mainMenu1);
-				}
-				else if (Main.SettingObject.get("Screen").toString().equals("960"))// mainmenu 3으로
-				{
-					Main.frame.setSize(Main.SCREEN_WIDTH[2], Main.SCREEN_HEIGHT[2]);
-					switchToScreen(Main.mainMenu1);
-				}
-				else {
-					System.out.println("에러 발생.");
-					System.out.println(Main.SettingObject.get("Screen"));
-				}
+
+			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
+				Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
+				switchToScreen(Main.mainMenu1);
 			}
 		}
 		else if(item == 1)
@@ -977,45 +945,13 @@ public class Board3 extends JPanel {
 
 				} else // 빈칸을 입력했거나, 이름입력대화상자에서 취소 눌렀을 때
 				{
-					if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else if (Main.SettingObject.get("Screen").toString().equals("960"))// mainmenu 3으로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[2], Main.SCREEN_HEIGHT[2]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else
-						System.out.println("에러 발생.");
-				}
-
-			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
-				if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
-				{
 					Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
 					switchToScreen(Main.mainMenu1);
 				}
-				else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
-				{
-					Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
-					switchToScreen(Main.mainMenu1);
-				}
-				else if (Main.SettingObject.get("Screen").toString().equals("960"))// mainmenu 3으로
-				{
-					Main.frame.setSize(Main.SCREEN_WIDTH[2], Main.SCREEN_HEIGHT[2]);
-					switchToScreen(Main.mainMenu1);
-				}
-				else {
-					System.out.println("에러 발생.");
-					System.out.println(Main.SettingObject.get("Screen"));
-				}
+
+			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
+				Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
+				switchToScreen(Main.mainMenu1);
 			}
 		}
 		GameInit();
