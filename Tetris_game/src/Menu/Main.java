@@ -58,6 +58,7 @@ public class Main {
     public static boolean isColorBlindnessMode; // 색맹 모드 상태 저장
 
 
+
     public static boolean isInputing = false; // 사용자가 키값을 바꾸려고 할 때인가?
     public static String currentChangingKey = "";
     public static String path;
@@ -81,7 +82,7 @@ public class Main {
             System.out.println("color_blind : " + SettingObject.get("color_blind"));
 
             // "color_blind" 값 읽기
-            isColorBlindnessMode = (Boolean) SettingObject.get("color_blind");
+            isColorBlindnessMode = SettingObject.get("color_blind").toString().equals("On") ? true : false;
             Board.colorBlindMode = isColorBlindnessMode;
             if(Board.colorBlindMode) {Board.setColorBlindMode(true);}
 

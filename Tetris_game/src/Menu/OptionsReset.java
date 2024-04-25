@@ -12,7 +12,7 @@ public class OptionsReset {
 
     private static final String INITIAL_SETTINGS_JSON =
             "{\"K_DOWN\":83,\"K_LEFT\":68,\"K_ENTER\":10,\"Screen\":\"1280\"," +
-                    "\"K_ROTATE\":\"SPACE\",\"K_UP\":87,\"K_RIGHT\":65,\"color_blind\":false}";
+                    "\"K_ROTATE\":\"SPACE\",\"K_UP\":87,\"K_RIGHT\":65,\"color_blind\":Off}";
 
     // Reset 메서드 구현
     public static void resetOptions() {
