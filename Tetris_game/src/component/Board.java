@@ -46,6 +46,7 @@ public class Board extends JPanel {
 	int lines = 0; // 현재 지워진 라인 수
 	int bricks = 0; // 생성된 벽돌의 개수
 	String name;
+	boolean create_item = true;
 
 	private boolean isPaused = false; // 게임이 일시 중지되었는지 나타내는 변수
 	public static boolean colorBlindMode; // 색맹모드
@@ -144,7 +145,6 @@ public class Board extends JPanel {
 		bricks++;
 		setLevel();
 		int slot = 0;
-
 		if(item == 0)
 		{
 			switch (mode) {
@@ -205,8 +205,9 @@ public class Board extends JPanel {
 		else if(item == 1)
 		{
 			System.out.println(bricks);
-			if(lines != 0 && lines % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
+			if(create_item && lines != 0 && lines % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
 			{
+				create_item = false;
 				slot = rnd.nextInt(5);
 				if(slot == 0) {
 					curr_name = nextcurr_name;
@@ -381,6 +382,7 @@ public class Board extends JPanel {
 				Arrays.fill(color_board[0], Color.WHITE);
 				scores += 100;
 				lines++; // 완성된 라인 수 증가
+				create_item = true;
 				i++; // 줄을 지운 후, 같은 줄을 다시 검사하기 위해 i 값을 증가시킵니다.
 			}
 		}
