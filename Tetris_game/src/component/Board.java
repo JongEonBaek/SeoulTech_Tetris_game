@@ -1120,7 +1120,6 @@ public class Board extends JPanel {
 								}
 							}
 						}
-						placeBlock();
 						for (int a = -9; a < 10; ++a) {
 							if (x + Linei + a < 0 || x + Linei + a > 9)
 								continue;
