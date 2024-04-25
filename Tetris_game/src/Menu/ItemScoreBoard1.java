@@ -53,7 +53,7 @@ public class ItemScoreBoard1 extends JPanel implements KeyListener {
                     JSONObject temp = new JSONObject();
                     temp.put("mode", 0);
                     temp.put("scores", 0);
-                    temp.put("item", 0);
+                    temp.put("item", 1);
                     temp.put("name", "Default Value");
                     temp.put("recent", 0);
                     sortedScoreArray.add(temp);
@@ -145,8 +145,9 @@ public class ItemScoreBoard1 extends JPanel implements KeyListener {
                     JSONObject temp = new JSONObject();
                     temp.put("mode", 0);
                     temp.put("scores", 0);
-                    temp.put("item", 0);
+                    temp.put("item", 1);
                     temp.put("name", "Default Value");
+                    temp.put("recent", 0);
                     sortedScoreArray.add(temp);
                 }
                 else
@@ -170,11 +171,21 @@ public class ItemScoreBoard1 extends JPanel implements KeyListener {
         // 데이터 행 추가
         for (int i = 0; i < sortedScoreArray.size(); i++) {
             JSONObject score = (JSONObject) sortedScoreArray.get(i);
-            scoreTable.add(new JLabel(String.valueOf(i + 1), SwingConstants.CENTER));
-            scoreTable.add(new JLabel((String) score.get("name"), SwingConstants.CENTER));
-            scoreTable.add(new JLabel(String.valueOf(score.get("item")).equals("1") ? "Item" : "Normal", SwingConstants.CENTER));
-            scoreTable.add(new JLabel(String.valueOf(score.get("mode")).equals("0") ? "Easy" : String.valueOf(score.get("mode")).equals("1") ? "Normal" : "Hard" , SwingConstants.CENTER));
-            scoreTable.add(new JLabel(String.valueOf(score.get("scores")), SwingConstants.CENTER));
+            if(String.valueOf(score.get("recent")).equals("0")) {
+                scoreTable.add(new JLabel(String.valueOf(i + 1), SwingConstants.CENTER));
+                scoreTable.add(new JLabel((String) score.get("name"), SwingConstants.CENTER));
+                scoreTable.add(new JLabel(String.valueOf(score.get("item")).equals("1") ? "Item" : "Normal", SwingConstants.CENTER));
+                scoreTable.add(new JLabel(String.valueOf(score.get("mode")).equals("0") ? "Easy" : String.valueOf(score.get("mode")).equals("1") ? "Normal" : "Hard", SwingConstants.CENTER));
+                scoreTable.add(new JLabel(String.valueOf(score.get("scores")), SwingConstants.CENTER));
+            }
+            else
+            {
+                scoreTable.add(new JLabel("*" + String.valueOf(i + 1) + "*", SwingConstants.CENTER));
+                scoreTable.add(new JLabel("*" + ((String) score.get("name")) +"*", SwingConstants.CENTER));
+                scoreTable.add(new JLabel("*" + (String.valueOf(score.get("item")).equals("1") ? "Item" : "Normal") + "*", SwingConstants.CENTER));
+                scoreTable.add(new JLabel("*" + (String.valueOf(score.get("mode")).equals("0") ? "Easy" : String.valueOf(score.get("mode")).equals("1") ? "Normal" : "Hard") +"*", SwingConstants.CENTER));
+                scoreTable.add(new JLabel("*" + (String.valueOf(score.get("scores"))) +"*", SwingConstants.CENTER));
+            }
         }
 
         this.keyMessage = new JLabel(" ");

@@ -96,7 +96,7 @@ public class Board3 extends JPanel {
 
 		//Document default style.
 		styleSet = new SimpleAttributeSet(); // 스타일 설정을 위한 객체 생성
-		StyleConstants.setFontSize(styleSet, 18); // 폰트 크기를 18로 설정
+		StyleConstants.setFontSize(styleSet, 19); // 폰트 크기를 18로 설정
 		StyleConstants.setFontFamily(styleSet, "consolas");// 폰트 종류를 mac은 Courier로 설정, window는 consolas로 설정
 		StyleConstants.setBold(styleSet, true); // 폰트를 굵게 설정
 		StyleConstants.setForeground(styleSet, Color.WHITE); // 폰트 색상을 흰색으로 설정
