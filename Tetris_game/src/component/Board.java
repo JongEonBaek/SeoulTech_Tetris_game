@@ -799,6 +799,16 @@ public class Board extends JPanel {
 							doc.insertString(doc.getLength(), "T", styleSet);
 							StyleConstants.setForeground(styleSet, Color.WHITE);
 						}
+						else if (nextcurr.getShape(k, i) == 4){
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "L", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+						}
+						else if (nextcurr.getShape(k, i) == 5){
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "V", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+						}
 						else doc.insertString(doc.getLength(), " ", styleSet);
 					}
 				}
