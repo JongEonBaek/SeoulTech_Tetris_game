@@ -191,9 +191,18 @@ public class Board extends JPanel {
 			System.out.println(bricks);
 			if(bricks != 0 && bricks % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
 			{
-				curr_name = nextcurr_name;
-				nextcurr_name = "WeightBlock";
-				return new WeightBlock();
+				slot = rnd.nextInt(2);
+				if(slot == 0) {
+					curr_name = nextcurr_name;
+					nextcurr_name = "WeightBlock";
+					return new WeightBlock();
+				}
+				else if(slot == 1)
+				{
+					curr_name = nextcurr_name;
+					nextcurr_name = "BombBlock";
+					return new BombBlock();
+				}
 			}
 			switch (mode) {
 
@@ -372,8 +381,6 @@ public class Board extends JPanel {
 		{
 			if(weightblockLock)
 				return false;
-			else
-				return true;
 		}
 		for (int i = 0; i < curr.height(); i++) {
 			for (int j = 0; j < curr.width(); j++) {
@@ -390,15 +397,9 @@ public class Board extends JPanel {
 	protected boolean canMoveRight() {
 		// 블록을 오른쪽으로 이동할 수 있는지 확인하는 메소드
 		// 블록의 오른쪽에 다른 블록이 없고, 블록이 게임 보드의 오른쪽 경계를 넘지 않는 경우에만 true를 반환합니다.
-		if(curr_name.equals("WeightBlock"))
-		{
-			if(curr_name.equals("WeightBlock"))
-			{
-				if(weightblockLock)
-					return false;
-				else
-					return true;
-			}
+		if(curr_name.equals("WeightBlock")) {
+			if (weightblockLock)
+				return false;
 		}
 		for (int i = 0; i < curr.height(); i++) {
 			for (int j = 0; j < curr.width(); j++) {
@@ -439,13 +440,11 @@ public class Board extends JPanel {
 		eraseCurr(); // 현재 블록의 위치를 한칸 내리기 위해 게임 보드에서 지웁니다.
 		if(curr_name.equals("WeightBlock"))
 		{
-			System.out.println("내려갈 수 있나?");
 			if(canMoveDown())
 			{
 				y++;
 				for(int i=0;i<4;++i) {
 					board[y+1][x+i] = 0;
-					System.out.println(String.format("%d, %d",x+i, y-1));
 				}
 			}
 			else {
@@ -469,6 +468,19 @@ public class Board extends JPanel {
 		}
 		else { // 아래로 이동할 수 없는 경우 (다른 블록에 닿거나 바닥에 닿은 경우)
 			placeBlock(); // 현재 위치에 블록을 고정시킵니다.
+			if(curr_name.equals("BombBlock"))
+			{
+				for(int i=-1;i<3;++i)
+				{
+					for(int j= -1;j<3;++j)
+					{
+						if(y+j < 0 || y + j > 19 || x+i <0 || x+i > 9)
+							continue;
+						board[y+j][x+i] = 0;
+					}
+				}
+				eraseCurr();
+			}
 			checkLines(); // 완성된 라인이 있는지 확인합니다.
 			checkLines(); // 완성된 라인이 있는지 확인합니다.
 			curr = nextcurr; // 다음블록을 현재 블록으로 설정합니다.
@@ -519,7 +531,9 @@ public class Board extends JPanel {
 
 			// 게임 보드의 각 열을 순회합니다.
 			for (int j = 0; j < board[i].length; j++) {
-				if (board[i][j] == 1) {
+				if(board[i][j] == 2)
+					sb.append('B');
+				else if (board[i][j] == 1) {
 					sb.append("O"); // 블록이 있는 위치는 "O" 문자로 표시합니다.
 				} else {
 					sb.append(" "); // 블록이 없는 위치는 공백으로 표시합니다.
@@ -902,6 +916,12 @@ public class Board extends JPanel {
 							}
 						}
 					}
+					else if(curr_name.equals("BombBlock")) {
+						while (canMoveDown()) {
+							y++;
+						}
+					}
+
 					else
 					{
 						while (canMoveDown()) {
@@ -910,6 +930,19 @@ public class Board extends JPanel {
 						}
 					}
 					placeBlock();
+					if(curr_name.equals("BombBlock"))
+					{
+						for(int i=-1;i<3;++i)
+						{
+							for(int j= -1;j<3;++j)
+							{
+								if(y+j < 0 || y + j > 19 || x+i <0 || x+i > 9)
+									continue;
+								board[y+j][x+i] = 0;
+							}
+						}
+						eraseCurr();
+					}
 					checkLines();
 					curr = nextcurr;
 					nextcurr = getRandomBlock();
