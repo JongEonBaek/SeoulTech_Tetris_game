@@ -205,10 +205,10 @@ public class Board3 extends JPanel {
 		else if(item == 1)
 		{
 			System.out.println(bricks);
-			if(bricks != 0 && bricks % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
+			if(lines != 0 && lines % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
 			{
-				slot = rnd.nextInt(1);
-				if(slot == 5) {
+				slot = rnd.nextInt(5);
+				if(slot == 0) {
 					curr_name = nextcurr_name;
 					nextcurr_name = "WeightBlock";
 					return new WeightBlock();
@@ -236,7 +236,7 @@ public class Board3 extends JPanel {
 					nextcurr_name = "ItemLBlock";
 					return temp;
 				}
-				else if(slot == 0)
+				else if(slot == 4)
 				{
 					item = 0;
 					Block temp = getRandomBlock();
@@ -606,19 +606,30 @@ public class Board3 extends JPanel {
 			}
 			if(!curr_name.equals("BombBlock")) {
 				placeBlock(); // 현재 위치에 블록을 고정시킵니다.
+
 				if(curr_name.equals("ItemLBlock")) {
 					for (int a = -9; a < 10; ++a) {
 						if (x + Linei + a < 0 || x + Linei + a > 9)
 							continue;
 						board[y + Linej][x + Linei + a] = 0;
+
 					}
+					for (int k = y + Linej; k > 0; k--) {
+						board[k] = Arrays.copyOf(board[k - 1], WIDTH);
+						color_board[k] = Arrays.copyOf(color_board[k - 1], WIDTH);
+					}
+
+
+
 				}
+
 				if(curr_name.equals("ItemVBlock")) {
 					for (int b = -19; b < 20; ++b) {
 						if (y + Linej + b < 0 || y + Linej + b > 19)
 							continue;
 						board[y + Linej+b][x + Linei] = 0;
 					}
+
 				}
 			}
 
@@ -799,6 +810,16 @@ public class Board3 extends JPanel {
 							doc.insertString(doc.getLength(), "T", styleSet);
 							StyleConstants.setForeground(styleSet, Color.WHITE);
 						}
+						else if (nextcurr.getShape(k, i) == 4){
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "L", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+						}
+						else if (nextcurr.getShape(k, i) == 5){
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "V", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+						}
 						else doc.insertString(doc.getLength(), " ", styleSet);
 					}
 				}
@@ -866,7 +887,7 @@ public class Board3 extends JPanel {
 
 		switch (mode) {
 			case 0:  //easy
-				if (bricks == 20 || bricks == 50 || bricks == 100 || bricks == 200) {
+				if (bricks == 20 || bricks == 40 || bricks == 60 || bricks == 80) {
 					level++;
 					point++;
 					timer.stop();
@@ -876,7 +897,7 @@ public class Board3 extends JPanel {
 				}
 				break;
 			case 1:
-				if (bricks == 20 || bricks == 50 || bricks == 100 || bricks == 200) {
+				if (bricks == 20 || bricks == 40 || bricks == 60 || bricks == 80) {
 					level++;
 					point++;
 					timer.stop();
@@ -886,7 +907,7 @@ public class Board3 extends JPanel {
 				}
 				break;
 			case 2:
-				if (bricks == 20 || bricks == 50 || bricks == 100 || bricks == 200) {
+				if (bricks == 20 || bricks == 40 || bricks == 60 || bricks == 80) {
 					level++;
 					point++;
 					timer.stop();
@@ -957,7 +978,7 @@ public class Board3 extends JPanel {
 				name = JOptionPane.showInputDialog(this, "이름을 입력하세요:"); // 이름입력하는 대화상자
 				//정상적으로 이름을 입력했다면
 				if (name != null && !name.isEmpty()) {
-					switchToScreen(Main.mainMenu1);
+
 
 					JSONArray scoreList = new JSONArray();
 					JSONParser parser = new JSONParser();
@@ -986,8 +1007,6 @@ public class Board3 extends JPanel {
 					scoreData.put("recent", 1); // 가장 최근에 끝난 게임임을 알려주는 심볼
 					scoreList.add(scoreData);
 
-					Main.classicScoreBoard1.update();
-
 					// 파일에 새 데이터 쓰기
 					try (FileWriter file = new FileWriter("Tetris_game/src/ClassicScoreData.json")) {
 						file.write(scoreList.toJSONString());
@@ -995,6 +1014,9 @@ public class Board3 extends JPanel {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+
+					Main.classicScoreBoard1.update();
+					switchToScreen(Main.classicScoreBoard1);
 
 					System.out.println(name);
 					System.out.println(scores);
@@ -1023,7 +1045,7 @@ public class Board3 extends JPanel {
 				name = JOptionPane.showInputDialog(this, "이름을 입력하세요:"); // 이름입력하는 대화상자
 				//정상적으로 이름을 입력했다면
 				if (name != null && !name.isEmpty()) {
-					switchToScreen(Main.mainMenu1);
+
 
 					JSONArray scoreList = new JSONArray();
 					JSONParser parser = new JSONParser();
@@ -1052,8 +1074,6 @@ public class Board3 extends JPanel {
 					scoreData.put("recent", 1); // 가장 최근에 끝난 게임임을 알려주는 심볼
 					scoreList.add(scoreData);
 
-					Main.classicScoreBoard1.update();
-
 					// 파일에 새 데이터 쓰기
 					try (FileWriter file = new FileWriter("Tetris_game/src/ItemScoreData.json")) {
 						file.write(scoreList.toJSONString());
@@ -1062,13 +1082,19 @@ public class Board3 extends JPanel {
 						e.printStackTrace();
 					}
 
+					Main.itemScoreBoard1.update();
+
+					switchToScreen(Main.itemScoreBoard1);
+
 					System.out.println(name);
 					System.out.println(scores);
 					System.out.println(mode);
 
-				} else // 빈칸을 입력했거나, 이름입력대화상자에서 취소 눌렀을 때
+
+				} else { // 빈칸을 입력했거나, 이름입력대화상자에서 취소 눌렀을 때
 					Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
-				switchToScreen(Main.mainMenu1);
+					switchToScreen(Main.mainMenu1);
+				}
 
 			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
 				Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
