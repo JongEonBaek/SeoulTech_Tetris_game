@@ -9,7 +9,7 @@ import java.awt.Color;
 //추상클래스 정의하여 Block을 상속받을 수 있게 함
 public abstract class Block {
 		
-	protected int[][] shape; //테트리스 블록의 형태를 나타냄. 예를 들어, 2x2 크기의 정사각형 블록은 {{1,1}, {1,1}}
+	public int[][] shape; //테트리스 블록의 형태를 나타냄. 예를 들어, 2x2 크기의 정사각형 블록은 {{1,1}, {1,1}}
 	protected Color color; // 블록의 색상 저장하는 color객체
 	// 색맹 모드 상태
 
@@ -57,8 +57,6 @@ public abstract class Block {
 		}
 
 		shape = newShape;
-
-
 	}
 
 	//height 메서드는 블록의 높이(세로 길이)를 반환

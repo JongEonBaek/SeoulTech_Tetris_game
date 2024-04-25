@@ -1,6 +1,6 @@
 package Menu;
 
-import component.Board;
+import component.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,34 +20,19 @@ public class Main {
 
     public static JPanel mainPanel;
     public static CardLayout cardLayout;
-    public static final int SCREEN_WIDTH[] = {1280, 1024, 960, 460};
-    public static final int SCREEN_HEIGHT[] = {720, 576, 540, 740};
+    public static final int SCREEN_WIDTH[] = {1280, 460, 517, 368};
+    public static final int SCREEN_HEIGHT[] = {720, 740, 814, 592};
     public static MainMenuLabel1 mainMenu1;
     public static OptionsLabel1 optionMenu1;
-    public static MainMenuLabel2 mainMenu2;
-    public static OptionsLabel2 optionMenu2;
-    public static MainMenuLabel3 mainMenu3;
-    public static OptionsLabel3 optionMenu3;
-
     public static GameModeLabel1 gameMode1;
-    public static GameModeLabel2 gameMode2;
-    public static GameModeLabel3 gameMode3;
-
     public static ClassicModeLabel1 classicMode1;
-    public static ClassicModeLabel2 classicMode2;
-    public static ClassicModeLabel3 classicMode3;
-
     public static ItemModeLabel1 itemMode1;
-    public static ItemModeLabel2 itemMode2;
-    public static ItemModeLabel3 itemMode3;
     public static Board gamePanel;
+    public static Board2 gamePanel2;
+    public static Board3 gamePanel3;
     public static KeyControl1 keyControl1;
-    public static KeyControl2 keyControl2;
-    public static KeyControl3 keyControl3;
     public static ClassicScoreBoard1 classicScoreBoard1;
     public static ItemScoreBoard1 itemScoreBoard1;
-    public static ClassicScoreBoard2 normalscoreBoard2;
-    public static ClassicScoreBoard3 classicScoreBoard3;
     public static ScoreBoardMenu1 scoreBoardMenu1;
 
 
@@ -109,55 +94,44 @@ public class Main {
         mainMenu1.setName("MainMenu1");
         optionMenu1 = new OptionsLabel1();
         optionMenu1.setName("Options1");
-        mainMenu2 = new MainMenuLabel2();
-        mainMenu2.setName("MainMenu2");
-        optionMenu2 = new OptionsLabel2();
-        optionMenu2.setName("Options2");
-        mainMenu3 = new MainMenuLabel3();
-        mainMenu3.setName("MainMenu3");
-        optionMenu3 = new OptionsLabel3();
-        optionMenu3.setName("Options3");
+
 
         gameMode1 = new GameModeLabel1();
         gameMode1.setName("GameMode1");
-        gameMode2 = new GameModeLabel2();
-        gameMode2.setName("GameMode2");
-        gameMode3 = new GameModeLabel3();
-        gameMode3.setName("GameMode3");
+
 
         classicMode1 = new ClassicModeLabel1();
         classicMode1.setName("ClassicMode1");
-        classicMode2 = new ClassicModeLabel2();
-        classicMode2.setName("ClassicMode2");
-        classicMode3 = new ClassicModeLabel3();
-        classicMode3.setName("ClassicMode3");
+
 
         itemMode1 = new ItemModeLabel1();
         itemMode1.setName("ItemMode1");
-        itemMode2= new ItemModeLabel2();
-        itemMode2.setName("ItemMode2");
-        itemMode3 = new ItemModeLabel3();
-        itemMode3.setName("ItemMode3");
+
 
         
         gamePanel = new Board();
-        gamePanel.setSize(SCREEN_WIDTH[3], SCREEN_HEIGHT[3]);
+        gamePanel.setSize(SCREEN_WIDTH[1], SCREEN_HEIGHT[1]);
         gamePanel.setVisible(true);
         gamePanel.setName("game");
+        gamePanel2 = new Board2();
+        gamePanel2.setSize(SCREEN_WIDTH[2], SCREEN_HEIGHT[2]);
+        gamePanel2.setVisible(true);
+        gamePanel2.setName("game2");
+        gamePanel3 = new Board3();
+        gamePanel3.setSize(SCREEN_WIDTH[3], SCREEN_HEIGHT[3]);
+        gamePanel3.setVisible(true);
+        gamePanel3.setName("game3");
+
+
+
+
 
         keyControl1 = new KeyControl1();
         keyControl1.setName("Control1");
-        keyControl2 = new KeyControl2();
-        keyControl2.setName("Control2");
-        keyControl3 = new KeyControl3();
-        keyControl3.setName("Control3");
+
 
         classicScoreBoard1 = new ClassicScoreBoard1();
         classicScoreBoard1.setName("NormalScoreBoard1");
-        normalscoreBoard2 = new ClassicScoreBoard2();
-        normalscoreBoard2.setName("NormalScoreBoard2");
-        classicScoreBoard3 = new ClassicScoreBoard3();
-        classicScoreBoard3.setName("NormalScoreBoard3");
 
         itemScoreBoard1 = new ItemScoreBoard1();
         itemScoreBoard1.setName("ItemScoreBoard1");
@@ -167,32 +141,26 @@ public class Main {
 
         mainPanel.add(mainMenu1, "MainMenu1");
         mainPanel.add(optionMenu1, "Options1");
-        mainPanel.add(mainMenu2, "MainMenu2");
-        mainPanel.add(optionMenu2, "Options2");
-        mainPanel.add(mainMenu3, "MainMenu3");
-        mainPanel.add(optionMenu3, "Options3");
+
 
         mainPanel.add(gameMode1, "GameMode1");
-        mainPanel.add(gameMode2, "GameMode2");
-        mainPanel.add(gameMode3, "GameMode3");
+
 
         mainPanel.add(classicMode1, "ClassicMode1");
-        mainPanel.add(classicMode2, "ClassicMode2");
-        mainPanel.add(classicMode3, "ClassicMode3");
+
 
         mainPanel.add(itemMode1, "ItemMode1");
-        mainPanel.add(itemMode2, "ItemMode2");
-        mainPanel.add(itemMode3, "ItemMode3");
+
 
         mainPanel.add(gamePanel, "game");
+        mainPanel.add(gamePanel2, "game2");
+        mainPanel.add(gamePanel3, "game3");
 
         mainPanel.add(keyControl1, "Control1");
-        mainPanel.add(keyControl2, "Control2");
-        mainPanel.add(keyControl3, "Control3");
+
 
         mainPanel.add(classicScoreBoard1, "NormalScoreBoard1");
-        mainPanel.add(normalscoreBoard2, "NormalScoreBoard2");
-        mainPanel.add(classicScoreBoard3, "NormalScoreBoard3");
+
 
         mainPanel.add(itemScoreBoard1, "ItemScoreBoard1");
 

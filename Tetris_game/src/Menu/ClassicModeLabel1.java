@@ -111,41 +111,110 @@ public class ClassicModeLabel1  extends JPanel implements KeyListener {
         switch (index) {
             case 0: // Easy
                 System.out.println("Easy Selected1");
-                Main.frame.setSize(Main.SCREEN_WIDTH[3], Main.SCREEN_HEIGHT[3]);
-                Main.gamePanel.item = 0;
-                Main.gamePanel.mode = 0;
-                Main.gamePanel.GameInit();
-                switchToScreen(Main.gamePanel);
-                Main.gamePanel.timer.start();
-                // Main.gamePanel.setSize(Main.SCREEN_WIDTH[3], Main.SCREEN_HEIGHT[3]);
-                Main.gamePanel.setVisible(true);
-                Main.gamePanel.mode = 0;
+                if(((Number)Main.SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[1])
+                {
+                    Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
+                    Main.gamePanel.item = 0;
+                    Main.gamePanel.mode = 0;
+                    Main.gamePanel.GameInit();
+                    switchToScreen(Main.gamePanel);
+                    Main.gamePanel.timer.start();
+                    Main.gamePanel.setVisible(true);
+                }
+                else if(((Number)Main.SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[2])
+                {
+                    Main.frame.setSize(Main.SCREEN_WIDTH[2], Main.SCREEN_HEIGHT[2]);
+                    Main.gamePanel2.item = 0;
+                    Main.gamePanel2.mode = 0;
+                    Main.gamePanel2.GameInit();
+                    switchToScreen(Main.gamePanel2);
+                    Main.gamePanel2.timer.start();
+                    Main.gamePanel2.setVisible(true);
+                }
+                else if(((Number)Main.SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[3])
+                {
+                    Main.frame.setSize(Main.SCREEN_WIDTH[3], Main.SCREEN_HEIGHT[3]);
+                    Main.gamePanel3.item = 0;
+                    Main.gamePanel3.mode = 0;
+                    Main.gamePanel3.GameInit();
+                    switchToScreen(Main.gamePanel3);
+                    Main.gamePanel3.timer.start();
+                    Main.gamePanel3.setVisible(true);
+                }
+                else
+                    System.out.println("EORRORORORORORORORROROROROR!");
+
 
                 // 여기서 다음 화면으로 넘어가는 로직을 구현
                 break;
             case 1: // Normal
-                System.out.println("Normal Selected");
-                Main.frame.setSize(Main.SCREEN_WIDTH[3], Main.SCREEN_HEIGHT[3]);
-                Main.gamePanel.item = 0;
-                Main.gamePanel.mode = 1;
-                switchToScreen(Main.gamePanel);
-                Main.gamePanel.timer.start();
-                // Main.gamePanel.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
-                Main.gamePanel.setVisible(true);
-                Main.gamePanel.mode = 1;
-                // 여기서 다음 화면으로 넘어가는 로직을 구현
+                if(((Number)Main.SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[1])
+                {
+                    Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
+                    Main.gamePanel.item = 0;
+                    Main.gamePanel.mode = 1;
+                    Main.gamePanel.GameInit();
+                    switchToScreen(Main.gamePanel);
+                    Main.gamePanel.timer.start();
+                    Main.gamePanel.setVisible(true);
+                }
+                else if(((Number)Main.SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[2])
+                {
+                    Main.frame.setSize(Main.SCREEN_WIDTH[2], Main.SCREEN_HEIGHT[2]);
+                    Main.gamePanel2.item = 0;
+                    Main.gamePanel2.mode = 1;
+                    Main.gamePanel2.GameInit();
+                    switchToScreen(Main.gamePanel2);
+                    Main.gamePanel2.timer.start();
+                    Main.gamePanel2.setVisible(true);
+                }
+                else if(((Number)Main.SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[3])
+                {
+                    Main.frame.setSize(Main.SCREEN_WIDTH[3], Main.SCREEN_HEIGHT[3]);
+                    Main.gamePanel3.item = 0;
+                    Main.gamePanel3.mode = 1;
+                    Main.gamePanel3.GameInit();
+                    switchToScreen(Main.gamePanel3);
+                    Main.gamePanel3.timer.start();
+                    Main.gamePanel3.setVisible(true);
+                }
+                else
+                    System.out.println("EORRORORORORORORORROROROROR!");
                 break;
             case 2: // Hard
                 System.out.println("Hard Selected");
-                Main.frame.setSize(Main.SCREEN_WIDTH[3], Main.SCREEN_HEIGHT[3]);
-                Main.gamePanel.item = 0;
-                Main.gamePanel.mode = 2;
-                switchToScreen(Main.gamePanel);
-                Main.gamePanel.timer.start();
-                // Main.gamePanel.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
-                Main.gamePanel.setVisible(true);
-                Main.gamePanel.mode = 2;
-                // 여기서 다음 화면으로 넘어가는 로직을 구현
+                if(((Number)Main.SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[1])
+                {
+                    Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
+                    Main.gamePanel.item = 0;
+                    Main.gamePanel.mode = 2;
+                    Main.gamePanel.GameInit();
+                    switchToScreen(Main.gamePanel);
+                    Main.gamePanel.timer.start();
+                    Main.gamePanel.setVisible(true);
+                }
+                else if(((Number)Main.SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[2])
+                {
+                    Main.frame.setSize(Main.SCREEN_WIDTH[2], Main.SCREEN_HEIGHT[2]);
+                    Main.gamePanel2.item = 0;
+                    Main.gamePanel2.mode = 2;
+                    Main.gamePanel2.GameInit();
+                    switchToScreen(Main.gamePanel2);
+                    Main.gamePanel2.timer.start();
+                    Main.gamePanel2.setVisible(true);
+                }
+                else if(((Number)Main.SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[3])
+                {
+                    Main.frame.setSize(Main.SCREEN_WIDTH[3], Main.SCREEN_HEIGHT[3]);
+                    Main.gamePanel3.item = 0;
+                    Main.gamePanel3.mode = 2;
+                    Main.gamePanel3.GameInit();
+                    switchToScreen(Main.gamePanel3);
+                    Main.gamePanel3.timer.start();
+                    Main.gamePanel3.setVisible(true);
+                }
+                else
+                    System.out.println("EORRORORORORORORORROROROROR!");
                 break;
             case 3: // Back(이전화면)
                 System.out.println("Back to GameMode");

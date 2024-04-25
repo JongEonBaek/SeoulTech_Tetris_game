@@ -3,6 +3,7 @@ package component;
 import blocks.*;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -12,9 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
+
 import Menu.Main;
 
 import org.json.simple.JSONObject;
@@ -22,7 +22,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
 import java.io.FileWriter;
-
+import java.util.List;
 
 
 // JFrame 상속받은 클래스 Board
@@ -63,6 +63,9 @@ public class Board extends JPanel {
 	public int mode = 1; // 난이도 설정 easy == 0, normal == 1, hard == 2;
 	public int item = 0; // itemMode 0 == false(보통모드), 1 == true(아이템모드);
 	public boolean gameOver = false; // 게임오버를 알려주는변수 true == 게임오버
+	private Timer timers = null;
+
+	private boolean isAnimationDone = true; // 새로운 멤버 변수 추가
 
 	public boolean weightblockLock = false;
 
@@ -78,7 +81,7 @@ public class Board extends JPanel {
 				BorderFactory.createLineBorder(Color.DARK_GRAY, 5)); // 복합 테두리 생성
 		pane.setBorder(border); // 텍스트 패널에 테두리를 설정
 		Border innerPadding = new EmptyBorder(0, 0, 0, 0); // 상단, 왼쪽, 하단, 오른쪽 여백 설정
-		pane.setPreferredSize(new Dimension(210, 690)); // 가로 300, 세로 200의 크기로 설정
+		pane.setPreferredSize(new Dimension(Main.SCREEN_WIDTH[1]/2 - 20, Main.SCREEN_HEIGHT[1] - 50)); // 가로 300, 세로 200의 크기로 설정
 
 
 		// 기존 복합 테두리와 내부 여백을 결합한 새로운 복합 테두리 생성
@@ -205,25 +208,28 @@ public class Board extends JPanel {
 			if(bricks != 0 && bricks % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
 			{
 				slot = rnd.nextInt(3);
-				if(slot == 0) {
+				if(slot == -1) {
 					curr_name = nextcurr_name;
 					nextcurr_name = "WeightBlock";
 					return new WeightBlock();
 				}
-				else if(slot == 1)
+				else if(slot == -1)
 				{
 					curr_name = nextcurr_name;
 					nextcurr_name = "BombBlock";
 					return new BombBlock();
 				}
-				else if(slot == 2) {
+				else
+				{
+					item = 0;
+					Block temp = getRandomBlock();
+					bricks--;
+					replaceOneWithL(temp.shape);
+					item = 1;
 					curr_name = nextcurr_name;
-					nextcurr_name = "TimeBlock";
-					return new TimeBlock();
-
+					nextcurr_name = "ItemLBlock";
+					return temp;
 				}
-
-
 			}
 			switch (mode) {
 
@@ -339,6 +345,7 @@ public class Board extends JPanel {
 	}
 
 
+
 	private void checkLines() {
 		for (int i = HEIGHT - 1; i >= 0; i--) {
 			boolean lineFull = true;
@@ -361,6 +368,52 @@ public class Board extends JPanel {
 			}
 		}
 	}
+
+
+	/*private void animateAndDeleteLines(ArrayList<Integer> a) {
+
+		final int[] count = {0};
+		isAnimationDone = false;
+		timers = new Timer(50, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// isAnimationDone이 false일 때만 실행
+					if (count[0] < 4) { // 1초 동안 총 6번의 변경 (5번의 빨간색/흰색 전환)
+						for (int line : a) {
+							Color color = (count[0] % 2 == 0) ? Color.RED : Color.WHITE;
+							Arrays.fill(color_board[line], color);
+						}
+
+						drawBoard(); // 보드 다시 그리기
+						count[0]++;
+					} else {
+						timers.stop();
+						// 애니메이션이 끝나면 실제로 줄을 삭제
+						for (int line : a) {
+							for (int k = line; k > 0; k--) {
+								board[k] = Arrays.copyOf(board[k - 1], WIDTH);
+								color_board[k] = Arrays.copyOf(color_board[k-1], WIDTH);
+							}
+						}
+
+						Arrays.fill(board[0], 0);
+						Arrays.fill(color_board[0], Color.WHITE);
+						drawBoard();
+
+
+						scores += 100 * a.size();
+						lines += a.size(); // 완성된 라인 수 증가
+						isAnimationDone = true; // 애니메이션 완료 후 true로 설정
+						timer.start();
+
+					}
+			}
+		});
+		if(!isAnimationDone)
+			timers.start();
+
+	}*/
+
 
 
 	// 현재 블록을 아래로 이동할 수 있는지 확인하는 메소드
@@ -445,11 +498,35 @@ public class Board extends JPanel {
 		return true;
 	}
 
+	public static void replaceOneWithL(int[][] board) {
+		// '1' 위치를 저장할 리스트 생성
+		List<int[]> positions = new ArrayList<>();
+
+		// 배열을 탐색하여 '1'의 위치를 찾는다
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == 1) {
+					positions.add(new int[]{i, j});
+				}
+			}
+		}
+
+		// '1'이 하나도 없으면 함수를 종료
+		if (positions.isEmpty()) {
+			return;
+		}
+
+		// '1'의 위치 중 무작위로 하나를 선택하여 'L'로 변경
+		Collections.shuffle(positions);
+		int[] selected = positions.get(0);
+		board[selected[0]][selected[1]] = 4;
+	}
 
 	// 현재 블록을 아래로 한 칸 이동시킨다. 만약 블록이 바닥이나 다른 블록에 닿았다면, 그 위치에 블록을 고정하고 새로운 블록 생성
 	protected void moveDown() {
 		System.out.println("mode : " + mode);
 		eraseCurr(); // 현재 블록의 위치를 한칸 내리기 위해 게임 보드에서 지웁니다.
+		int Linei = 0, Linej = 0; // ItemLBlock에서 블록을 배치한 후 지우기 위해 'L'이 들어있는 위치를 추적함.
 		if(curr_name.equals("WeightBlock"))
 		{
 			if(canMoveDown())
@@ -493,16 +570,30 @@ public class Board extends JPanel {
 				}
 				eraseCurr();
 			}
-			else if (curr_name.equals("TimeBLock"))
+			else if(curr_name.equals("ItemLBlock"))
 			{
-				placeBlock();
-				timer.stop();
-				timer.setDelay(initInterval*10);
-				timer.start();
+				for(int i=0;i<curr.width();++i)
+				{
+					for(int j=0;j<curr.height();++j)
+					{
+						System.out.println(String.format("%d %d", x, y));
+						if(curr.getShape(i, j) == 4);
+						{
+							Linei = i;
+							Linej = j;
+						}
+					}
+				}
 			}
-
-			else{
+			if(!curr_name.equals("BombBlock")) {
 				placeBlock(); // 현재 위치에 블록을 고정시킵니다.
+				if(curr_name.equals("ItemLBlcok")) {
+					for (int a = -9; a < 10; ++a) {
+						if (x + Linei + a < 0 || x + Linei + a > 9)
+							continue;
+						board[y + Linej][x + Linei + a] = 0;
+					}
+				}
 			}
 
 			curr = nextcurr; // 다음블록을 현재 블록으로 설정합니다.
@@ -514,7 +605,6 @@ public class Board extends JPanel {
 			if (!canMoveDown()) { // 새 블록이 움직일 수 없는 경우 (게임 오버)
 				GameOver();
 			}
-			placeBlock();
 
 		}
 
@@ -568,7 +658,7 @@ public class Board extends JPanel {
 		nextpane.setBorder(border); // 텍스트 패널에 테두리를 설정
 
 		Border innerPadding = new EmptyBorder(0, 0, 0, 0); // 상단, 왼쪽, 하단, 오른쪽 여백 설정
-		nextpane.setPreferredSize(new Dimension(220, 690)); // 가로 300, 세로 200의 크기로 설정
+		nextpane.setPreferredSize(new Dimension(Main.SCREEN_WIDTH[1]/2 - 10, Main.SCREEN_HEIGHT[1] -50)); // 가로 300, 세로 200의 크기로 설정
 		// 기존 복합 테두리와 내부 여백을 결합한 새로운 복합 테두리 생성
 		CompoundBorder newBorder = new CompoundBorder(border, innerPadding);
 		// 텍스트 패널에 새로운 테두리 설정
@@ -592,22 +682,21 @@ public class Board extends JPanel {
 			for (int i = 0; i < board.length; i++) {
 				doc.insertString(doc.getLength(), "X", styleSet);
 				for (int j = 0; j < board[i].length; j++) {
-					if(board[i][j] == 2)
+					if(board[i][j] == 4)
 					{
 						StyleConstants.setForeground(styleSet, color_board[i][j]);
-						doc.insertString(doc.getLength(), "B", styleSet);
+						doc.insertString(doc.getLength(), Character.toString(" OBTLDTOXXXXXXX".charAt(board[i][j])), styleSet);
 						StyleConstants.setForeground(styleSet, Color.WHITE);
 					}
-					else if(board[i][j] == 3)
+					else if(board[i][j] == 2)
 					{
 						StyleConstants.setForeground(styleSet, color_board[i][j]);
-						doc.insertString(doc.getLength(), "T", styleSet);
+						doc.insertString(doc.getLength(), Character.toString(" OBTLDTOXXXXXXX".charAt(board[i][j])), styleSet);
 						StyleConstants.setForeground(styleSet, Color.WHITE);
 					}
-					else if(board[i][j] == 1)
-					{
+					else if (board[i][j] == 1) {
 						StyleConstants.setForeground(styleSet, color_board[i][j]);
-						doc.insertString(doc.getLength(), Character.toString(" OBLEDTOXXXXXXX".charAt(board[i][j])), styleSet);
+						doc.insertString(doc.getLength(), Character.toString(" OBTLDTOXXXXXXX".charAt(board[i][j])), styleSet);
 						StyleConstants.setForeground(styleSet, Color.WHITE);
 					} else {
 						doc.insertString(doc.getLength(), " ", styleSet);
@@ -646,37 +735,14 @@ public class Board extends JPanel {
 			// 다음블럭을 처리하는 로직
 			for (int i = 0; i < 2; i++) {
 				//NEXT 블럭 표시
-
-				if(nextcurr_name == "WeightBlock")// WeightBlock
-				{
-					for (int k = 0; k < nextcurr.width(); k++) {
-						if (nextcurr.getShape(k, i) == 1 ) {
-							doc.insertString(doc.getLength(), "O", styleSet);
-						}
-						else doc.insertString(doc.getLength(), " ", styleSet);
-					}
-				}
-				else {
-					for (int k = 0; k < nextcurr.width(); k++) {
-						if (nextcurr.width() == 4 && i == 1) // "OOOO"만 너비가 4이므로 따로 처리
-							break;
-						if (nextcurr.getShape(k, i) == 1) {
-							StyleConstants.setForeground(styleSet, nextcurr.getColor());
-							doc.insertString(doc.getLength(), "O", styleSet);
-							StyleConstants.setForeground(styleSet, Color.WHITE);
-
-						} else if (nextcurr.getShape(k, i) == 2) {//BombBlock
-							StyleConstants.setForeground(styleSet, nextcurr.getColor());
-							doc.insertString(doc.getLength(), "B", styleSet);
-							StyleConstants.setForeground(styleSet, Color.WHITE);
-						}
-						else if (nextcurr.getShape(k, i) == 3) {//BombBlock
-							StyleConstants.setForeground(styleSet, nextcurr.getColor());
-							doc.insertString(doc.getLength(), "T", styleSet);
-							StyleConstants.setForeground(styleSet, Color.WHITE);
-						}
-						 else doc.insertString(doc.getLength(), " ", styleSet);
-					}
+				for (int k = 0; k < nextcurr.width(); k++) {
+					if (nextcurr.width() == 4 && i == 1) // "OOOO"만 너비가 4이므로 따로 처리
+						break;
+					if (nextcurr.getShape(k, i) == 1) {
+						StyleConstants.setForeground(styleSet, nextcurr.getColor());
+						doc.insertString(doc.getLength(), "O", styleSet);
+						StyleConstants.setForeground(styleSet, Color.WHITE);
+					} else doc.insertString(doc.getLength(), " ", styleSet);
 				}
 				doc.insertString(doc.getLength(), "\n", styleSet);
 			}
@@ -875,45 +941,13 @@ public class Board extends JPanel {
 
 				} else // 빈칸을 입력했거나, 이름입력대화상자에서 취소 눌렀을 때
 				{
-					if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else if (Main.SettingObject.get("Screen").toString().equals("960"))// mainmenu 3으로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[2], Main.SCREEN_HEIGHT[2]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else
-						System.out.println("에러 발생.");
-				}
-
-			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
-				if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
-				{
 					Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
 					switchToScreen(Main.mainMenu1);
 				}
-				else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
-				{
-					Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
-					switchToScreen(Main.mainMenu1);
-				}
-				else if (Main.SettingObject.get("Screen").toString().equals("960"))// mainmenu 3으로
-				{
-					Main.frame.setSize(Main.SCREEN_WIDTH[2], Main.SCREEN_HEIGHT[2]);
-					switchToScreen(Main.mainMenu1);
-				}
-				else {
-					System.out.println("에러 발생.");
-					System.out.println(Main.SettingObject.get("Screen"));
-				}
+
+			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
+				Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
+				switchToScreen(Main.mainMenu1);
 			}
 		}
 		else if(item == 1)
@@ -972,46 +1006,13 @@ public class Board extends JPanel {
 					System.out.println(mode);
 
 				} else // 빈칸을 입력했거나, 이름입력대화상자에서 취소 눌렀을 때
-				{
-					if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else if (Main.SettingObject.get("Screen").toString().equals("960"))// mainmenu 3으로
-					{
-						Main.frame.setSize(Main.SCREEN_WIDTH[2], Main.SCREEN_HEIGHT[2]);
-						switchToScreen(Main.mainMenu1);
-					}
-					else
-						System.out.println("에러 발생.");
-				}
-
-			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
-				if (Main.SettingObject.get("Screen").toString().equals("1280")) // mainmenu 1으로
-				{
 					Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
 					switchToScreen(Main.mainMenu1);
-				}
-				else if (Main.SettingObject.get("Screen").toString().equals("1024")) // mainmenu 2로
-				{
-					Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
-					switchToScreen(Main.mainMenu1);
-				}
-				else if (Main.SettingObject.get("Screen").toString().equals("960"))// mainmenu 3으로
-				{
-					Main.frame.setSize(Main.SCREEN_WIDTH[2], Main.SCREEN_HEIGHT[2]);
-					switchToScreen(Main.mainMenu1);
-				}
-				else {
-					System.out.println("에러 발생.");
-					System.out.println(Main.SettingObject.get("Screen"));
-				}
+
+			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
+				Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
+				switchToScreen(Main.mainMenu1);
+
 			}
 		}
 		GameInit();
@@ -1064,6 +1065,7 @@ public class Board extends JPanel {
 					break;
 				case KeyEvent.VK_ENTER:
 					eraseCurr();
+					int Linei = 0, Linej = 0; // ItemLBlock에서 블록을 배치한 후 지우기 위해 'L'이 들어있는 위치를 추적함.
 					if(curr_name.equals("WeightBlock"))
 					{
 						while (canMoveDown()) {
@@ -1073,23 +1075,21 @@ public class Board extends JPanel {
 							}
 						}
 					}
-
 					else if(curr_name.equals("BombBlock")) {
 						while (canMoveDown()) {
 							y++;
 						}
 					}
-					else if(curr_name.equals("TimeBlock")) {
-						while (canMoveDown()) {
+					else if(curr_name.equals("ItemLBlock"))
+					{
+						while(canMoveDown())
 							y++;
-						}
 					}
-
 					else
 					{
 						while (canMoveDown()) {
 							y++;
-							scores += point*2;
+							scores += point;
 						}
 					}
 					placeBlock();
@@ -1106,7 +1106,27 @@ public class Board extends JPanel {
 						}
 						eraseCurr();
 					}
-
+					else if(curr_name.equals("ItemLBlock"))
+					{
+						for(int i=0;i<curr.width();++i)
+						{
+							for(int j=0;j<curr.height();++j)
+							{
+								System.out.println(String.format("%d %d", x, y));
+								if(curr.getShape(i, j) == 4);
+								{
+									Linei = i;
+									Linej = j;
+								}
+							}
+						}
+						placeBlock();
+						for (int a = -9; a < 10; ++a) {
+							if (x + Linei + a < 0 || x + Linei + a > 9)
+								continue;
+							board[y + Linej][x + Linei + a] = 0;
+						}
+					}
 					checkLines();
 					curr = nextcurr;
 					nextcurr = getRandomBlock();
@@ -1118,6 +1138,7 @@ public class Board extends JPanel {
 
 				case KeyEvent.VK_Q:
 					System.exit(0); // 'q' 키가 눌렸을 때, 프로그램을 종료합니다.
+
 					break;
 			}
 		}
