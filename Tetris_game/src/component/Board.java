@@ -63,9 +63,6 @@ public class Board extends JPanel {
 	public int mode = 1; // 난이도 설정 easy == 0, normal == 1, hard == 2;
 	public int item = 0; // itemMode 0 == false(보통모드), 1 == true(아이템모드);
 	public boolean gameOver = false; // 게임오버를 알려주는변수 true == 게임오버
-	private Timer timers = null;
-
-	private boolean isAnimationDone = true; // 새로운 멤버 변수 추가
 
 	public boolean weightblockLock = false;
 
@@ -207,7 +204,7 @@ public class Board extends JPanel {
 			System.out.println(bricks);
 			if(bricks != 0 && bricks % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
 			{
-				slot = rnd.nextInt(2);
+				slot = rnd.nextInt(3);
 				if(slot == 0) {
 					curr_name = nextcurr_name;
 					nextcurr_name = "WeightBlock";
@@ -219,6 +216,14 @@ public class Board extends JPanel {
 					nextcurr_name = "BombBlock";
 					return new BombBlock();
 				}
+				else if(slot == 2) {
+					curr_name = nextcurr_name;
+					nextcurr_name = "TimeBlock";
+					return new TimeBlock();
+
+				}
+
+
 			}
 			switch (mode) {
 
@@ -334,7 +339,6 @@ public class Board extends JPanel {
 	}
 
 
-
 	private void checkLines() {
 		for (int i = HEIGHT - 1; i >= 0; i--) {
 			boolean lineFull = true;
@@ -357,52 +361,6 @@ public class Board extends JPanel {
 			}
 		}
 	}
-
-
-	/*private void animateAndDeleteLines(ArrayList<Integer> a) {
-
-		final int[] count = {0};
-		isAnimationDone = false;
-		timers = new Timer(50, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// isAnimationDone이 false일 때만 실행
-					if (count[0] < 4) { // 1초 동안 총 6번의 변경 (5번의 빨간색/흰색 전환)
-						for (int line : a) {
-							Color color = (count[0] % 2 == 0) ? Color.RED : Color.WHITE;
-							Arrays.fill(color_board[line], color);
-						}
-
-						drawBoard(); // 보드 다시 그리기
-						count[0]++;
-					} else {
-						timers.stop();
-						// 애니메이션이 끝나면 실제로 줄을 삭제
-						for (int line : a) {
-							for (int k = line; k > 0; k--) {
-								board[k] = Arrays.copyOf(board[k - 1], WIDTH);
-								color_board[k] = Arrays.copyOf(color_board[k-1], WIDTH);
-							}
-						}
-
-						Arrays.fill(board[0], 0);
-						Arrays.fill(color_board[0], Color.WHITE);
-						drawBoard();
-
-
-						scores += 100 * a.size();
-						lines += a.size(); // 완성된 라인 수 증가
-						isAnimationDone = true; // 애니메이션 완료 후 true로 설정
-						timer.start();
-
-					}
-			}
-		});
-		if(!isAnimationDone)
-			timers.start();
-
-	}*/
-
 
 
 	// 현재 블록을 아래로 이동할 수 있는지 확인하는 메소드
@@ -535,7 +493,15 @@ public class Board extends JPanel {
 				}
 				eraseCurr();
 			}
-			if(!curr_name.equals("BombBlock")) {
+			else if (curr_name.equals("TimeBLock"))
+			{
+				placeBlock();
+				timer.stop();
+				timer.setDelay(initInterval*10);
+				timer.start();
+			}
+
+			else{
 				placeBlock(); // 현재 위치에 블록을 고정시킵니다.
 			}
 
@@ -629,10 +595,17 @@ public class Board extends JPanel {
 					if(board[i][j] == 2)
 					{
 						StyleConstants.setForeground(styleSet, color_board[i][j]);
-						doc.insertString(doc.getLength(), Character.toString(" OBLEDTOXXXXXXX".charAt(board[i][j])), styleSet);
+						doc.insertString(doc.getLength(), "B", styleSet);
 						StyleConstants.setForeground(styleSet, Color.WHITE);
 					}
-					else if (board[i][j] == 1) {
+					else if(board[i][j] == 3)
+					{
+						StyleConstants.setForeground(styleSet, color_board[i][j]);
+						doc.insertString(doc.getLength(), "T", styleSet);
+						StyleConstants.setForeground(styleSet, Color.WHITE);
+					}
+					else if(board[i][j] == 1)
+					{
 						StyleConstants.setForeground(styleSet, color_board[i][j]);
 						doc.insertString(doc.getLength(), Character.toString(" OBLEDTOXXXXXXX".charAt(board[i][j])), styleSet);
 						StyleConstants.setForeground(styleSet, Color.WHITE);
@@ -673,14 +646,37 @@ public class Board extends JPanel {
 			// 다음블럭을 처리하는 로직
 			for (int i = 0; i < 2; i++) {
 				//NEXT 블럭 표시
-				for (int k = 0; k < nextcurr.width(); k++) {
-					if (nextcurr.width() == 4 && i == 1) // "OOOO"만 너비가 4이므로 따로 처리
-						break;
-					if (nextcurr.getShape(k, i) == 1) {
-						StyleConstants.setForeground(styleSet, nextcurr.getColor());
-						doc.insertString(doc.getLength(), "O", styleSet);
-						StyleConstants.setForeground(styleSet, Color.WHITE);
-					} else doc.insertString(doc.getLength(), " ", styleSet);
+
+				if(nextcurr_name == "WeightBlock")// WeightBlock
+				{
+					for (int k = 0; k < nextcurr.width(); k++) {
+						if (nextcurr.getShape(k, i) == 1 ) {
+							doc.insertString(doc.getLength(), "O", styleSet);
+						}
+						else doc.insertString(doc.getLength(), " ", styleSet);
+					}
+				}
+				else {
+					for (int k = 0; k < nextcurr.width(); k++) {
+						if (nextcurr.width() == 4 && i == 1) // "OOOO"만 너비가 4이므로 따로 처리
+							break;
+						if (nextcurr.getShape(k, i) == 1) {
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "O", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+
+						} else if (nextcurr.getShape(k, i) == 2) {//BombBlock
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "B", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+						}
+						else if (nextcurr.getShape(k, i) == 3) {//BombBlock
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "T", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+						}
+						 else doc.insertString(doc.getLength(), " ", styleSet);
+					}
 				}
 				doc.insertString(doc.getLength(), "\n", styleSet);
 			}
@@ -1077,7 +1073,13 @@ public class Board extends JPanel {
 							}
 						}
 					}
+
 					else if(curr_name.equals("BombBlock")) {
+						while (canMoveDown()) {
+							y++;
+						}
+					}
+					else if(curr_name.equals("TimeBlock")) {
 						while (canMoveDown()) {
 							y++;
 						}
@@ -1087,7 +1089,7 @@ public class Board extends JPanel {
 					{
 						while (canMoveDown()) {
 							y++;
-							scores += point;
+							scores += point*2;
 						}
 					}
 					placeBlock();
@@ -1104,6 +1106,7 @@ public class Board extends JPanel {
 						}
 						eraseCurr();
 					}
+
 					checkLines();
 					curr = nextcurr;
 					nextcurr = getRandomBlock();
