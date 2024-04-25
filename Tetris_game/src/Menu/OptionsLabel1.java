@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileWriter;
 import java.util.*;
 
 import static Menu.Main.SettingObject;
@@ -121,6 +122,13 @@ public class OptionsLabel1 extends JPanel implements KeyListener {
                     Main.SettingObject.put("Screen", Main.SCREEN_WIDTH[1]);
                 else
                     System.out.println("ERRORRORORORORORORORORORORO!!!!!!");
+
+                try (FileWriter file = new FileWriter("Tetris_game/src/Settings.json")) {
+                    file.write(SettingObject.toJSONString());
+                    file.flush();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case 2: // Exits
                 System.out.println("Controls");

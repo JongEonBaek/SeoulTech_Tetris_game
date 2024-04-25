@@ -81,7 +81,7 @@ public class Board extends JPanel {
 				BorderFactory.createLineBorder(Color.DARK_GRAY, 5)); // 복합 테두리 생성
 		pane.setBorder(border); // 텍스트 패널에 테두리를 설정
 		Border innerPadding = new EmptyBorder(0, 0, 0, 0); // 상단, 왼쪽, 하단, 오른쪽 여백 설정
-		pane.setPreferredSize(new Dimension(Main.SCREEN_WIDTH[1]/2 - 10, Main.SCREEN_HEIGHT[1])); // 가로 300, 세로 200의 크기로 설정
+		pane.setPreferredSize(new Dimension(Main.SCREEN_WIDTH[1]/2 - 20, Main.SCREEN_HEIGHT[1])); // 가로 300, 세로 200의 크기로 설정
 
 
 		// 기존 복합 테두리와 내부 여백을 결합한 새로운 복합 테두리 생성
@@ -1115,6 +1115,7 @@ public class Board extends JPanel {
 
 				case KeyEvent.VK_Q:
 					System.exit(0); // 'q' 키가 눌렸을 때, 프로그램을 종료합니다.
+
 					break;
 			}
 		}
