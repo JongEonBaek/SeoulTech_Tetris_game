@@ -16,7 +16,6 @@ import java.util.HashMap;
 
 public class Main {
     public static JFrame frame;
-
     public static JPanel mainPanel;
     public static CardLayout cardLayout;
     public static final int SCREEN_WIDTH[] = {1280, 460, 517, 368};

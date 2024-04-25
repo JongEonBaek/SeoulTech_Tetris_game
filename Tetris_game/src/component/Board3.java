@@ -66,6 +66,8 @@ public class Board3 extends JPanel {
 
 	public boolean weightblockLock = false;
 
+	boolean create_item = true;
+
 	// 생성자 Board, 게임 창 설정 및 초기게임 보드 준비, 첫 번째 블록 생성하고, 타이머 시작
 	public Board3() {
 		this.colorBlindMode = Main.isColorBlindnessMode;
@@ -202,8 +204,9 @@ public class Board3 extends JPanel {
 		else if(item == 1)
 		{
 			System.out.println(bricks);
-			if(lines != 0 && lines % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
+			if(create_item && lines != 0 && lines % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
 			{
+				create_item = false;
 				slot = rnd.nextInt(5);
 				if(slot == 0) {
 					curr_name = nextcurr_name;
@@ -378,6 +381,7 @@ public class Board3 extends JPanel {
 				Arrays.fill(color_board[0], Color.WHITE);
 				scores += 100;
 				lines++; // 완성된 라인 수 증가
+				create_item = true;
 				i++; // 줄을 지운 후, 같은 줄을 다시 검사하기 위해 i 값을 증가시킵니다.
 			}
 		}
