@@ -16,6 +16,9 @@ public class KeyControl1 extends JPanel implements KeyListener {
             "DOWN KEY : now - ",
             "LEFT KEY : now - ",
             "RIGHT KEY : now - ",
+            "ENTER KEY : now - ",
+            "SPACE KEY : now - ",
+            "Q KEY : now - ",
             "BACK"}; // 바꿀 수 있는 키들
 
     java.util.List<JLabel> menuItems;
@@ -39,7 +42,7 @@ public class KeyControl1 extends JPanel implements KeyListener {
         title.setBounds(50, Main.SCREEN_HEIGHT[0] / 8, 400, 50); // 위치와 크기 설정
         mainLabel.add(title);
 
-        int Start_y = Main.SCREEN_HEIGHT[0] * 5 / 9;
+        int Start_y = Main.SCREEN_HEIGHT[0] * 4 / 9;
         for (String i : labels) {
             addMenuItem(i, Start_y);
             Start_y += Main.SCREEN_HEIGHT[0] / 18;
@@ -70,6 +73,10 @@ public class KeyControl1 extends JPanel implements KeyListener {
         String downNow = KeyEvent.getKeyText(((Number)Main.SettingObject.get("K_DOWN")).intValue());
         String leftNow = KeyEvent.getKeyText(((Number)Main.SettingObject.get("K_LEFT")).intValue());
         String rightNow = KeyEvent.getKeyText(((Number)Main.SettingObject.get("K_RIGHT")).intValue());
+        String enterNow = KeyEvent.getKeyText(((Number)Main.SettingObject.get("K_ENTER")).intValue());
+        String spaceNow = KeyEvent.getKeyText(((Number)Main.SettingObject.get("K_SPACE")).intValue());
+        String qNow = KeyEvent.getKeyText(((Number)Main.SettingObject.get("K_Q")).intValue());
+
         for (int i = 0; i < menuItems.size(); i++) {
             if(i == 0)
             {
@@ -101,6 +108,30 @@ public class KeyControl1 extends JPanel implements KeyListener {
                     menuItems.get(i).setText(cursorSymbol + labels[i] + rightNow);
                 } else {
                     menuItems.get(i).setText(nonSelected + labels[i] + rightNow);
+                }
+            }
+            else if(i == 4)
+            {
+                if (i == currentIndex) {
+                    menuItems.get(i).setText(cursorSymbol + labels[i] + enterNow);
+                } else {
+                    menuItems.get(i).setText(nonSelected + labels[i] + enterNow);
+                }
+            }
+            else if(i == 5)
+            {
+                if (i == currentIndex) {
+                    menuItems.get(i).setText(cursorSymbol + labels[i] + spaceNow);
+                } else {
+                    menuItems.get(i).setText(nonSelected + labels[i] + spaceNow);
+                }
+            }
+            else if(i == 6)
+            {
+                if (i == currentIndex) {
+                    menuItems.get(i).setText(cursorSymbol + labels[i] + qNow);
+                } else {
+                    menuItems.get(i).setText(nonSelected + labels[i] + qNow);
                 }
             }
             else
@@ -182,7 +213,28 @@ public class KeyControl1 extends JPanel implements KeyListener {
                 keyMessage.setVisible(true);
                 Main.currentChangingKey = "K_RIGHT";
                 break;
-            case 4: // 다시 Option화면으로 이동하기
+            case 4:
+                System.out.println("ENTER키를 바꾸자");
+                Main.isInputing = true;
+                keyMessage.setText("<html>Input the key You want to use Key_Enter</html>"); // 메시지 표시
+                keyMessage.setVisible(true);
+                Main.currentChangingKey = "K_ENTER";
+                break;
+            case 5:
+                System.out.println("SPACE키를 바꾸자");
+                Main.isInputing = true;
+                keyMessage.setText("<html>Input the key You want to use Key_SPACE</html>"); // 메시지 표시
+                keyMessage.setVisible(true);
+                Main.currentChangingKey = "K_SPACE";
+                break;
+            case 6:
+                System.out.println("Quit키를 바꾸자");
+                Main.isInputing = true;
+                keyMessage.setText("<html>Input the key You want to use Key_Quit(In Game)</html>"); // 메시지 표시
+                keyMessage.setVisible(true);
+                Main.currentChangingKey = "K_Q";
+                break;
+            case 7: // 다시 Option화면으로 이동하기
                 switchToScreen(Main.optionMenu1);
                 break;
         }
@@ -190,9 +242,9 @@ public class KeyControl1 extends JPanel implements KeyListener {
 
     private void addMenuItem(String text, int y) {
         JLabel menuItem = new JLabel(text);
-        menuItem.setFont(new Font("Arial", Font.BOLD, Main.SCREEN_HEIGHT[0] / 24)); // 폰트 설정
+        menuItem.setFont(new Font("Arial", Font.BOLD, Main.SCREEN_HEIGHT[0] / 30)); // 폰트 설정
         menuItem.setForeground(Color.BLACK); // 텍스트 색상 설정
-        menuItem.setBounds((Main.SCREEN_HEIGHT[0] / 24) + Main.SCREEN_HEIGHT[0] / 72, y, 400, Main.SCREEN_HEIGHT[0] / 24); // 위치와 크기 설정
+        menuItem.setBounds((Main.SCREEN_HEIGHT[0] / 24) + Main.SCREEN_HEIGHT[0] / 72, y, 500, Main.SCREEN_HEIGHT[0] / 24); // 위치와 크기 설정
         menuItems.add(menuItem);
         mainLabel.add(menuItem);
     }

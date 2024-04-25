@@ -64,6 +64,7 @@ public class Board extends JPanel {
 	public int mode = 1; // 난이도 설정 easy == 0, normal == 1, hard == 2;
 	public int item = 0; // itemMode 0 == false(보통모드), 1 == true(아이템모드);
 	public boolean gameOver = false; // 게임오버를 알려주는변수 true == 게임오버
+	public boolean isfirst = true;
 	private Timer timers = null;
 
 	private boolean isAnimationDone = true; // 새로운 멤버 변수 추가
@@ -141,7 +142,8 @@ public class Board extends JPanel {
 
 
 	private Block getRandomBlock() {
-		Random rnd = new Random(System.currentTimeMillis()); // 현재 시간 기준으로 랜덤 객체 생성
+		Random rnd = new Random(System.currentTimeMillis());
+		isfirst = false;
 		bricks++;
 		setLevel();
 		int slot = 0;
@@ -1121,150 +1123,154 @@ public class Board extends JPanel {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			int Linei = 0, Linej = 0;
+			int keyCode = e.getKeyCode();
 			// 키가 눌렸을 때의 동작을 정의합니다.
-			switch (e.getKeyCode()) { // 눌린 키에 따라 적절한 동작을 수행합니다.
-				case KeyEvent.VK_DOWN:
-					moveDown(); // 아래 방향키가 눌렸을 때, 현재 블록을 아래로 이동시킵니다.
-					drawBoard(); // 게임 보드를 다시 그립니다.
-					break;
-				case KeyEvent.VK_RIGHT:
-					moveRight(); // 오른쪽 방향키가 눌렸을 때, 현재 블록을 오른쪽으로 이동시킵니다.
-					drawBoard(); // 게임 보드를 다시 그립니다.
-					break;
-				case KeyEvent.VK_LEFT:
-					moveLeft(); // 왼쪽 방향키가 눌렸을 때, 현재 블록을 왼쪽으로 이동시킵니다.
-					drawBoard(); // 게임 보드를 다시 그립니다.
-					break;
-				case KeyEvent.VK_UP:
-					eraseCurr(); // 현재 블록을 지웁니다.
-					if (canRotate()) { // 블록이 회전 가능한 경우에만 회전을 수행합니다.
-						curr.rotate(); // 현재 블록을 회전시킵니다.
-						placeBlock();
-					}
-
-					drawBoard(); // 게임 보드를 다시 그립니다.
-					break;
-				case KeyEvent.VK_SPACE:
-					isPaused = !isPaused; // 게임의 상태를 전환합니다.
-					if (isPaused) {
-						timer.stop(); // 게임이 일시 중지된 경우, 타이머를 중지합니다.
-						pane.setText("Game Paused\nPress SPACE to continue"); // 게임이 일시 중지된 상태를 표시합니다.
-					} else {
-						timer.start(); // 게임이 재개된 경우, 타이머를 시작합니다.
-					}
-					break;
-				case KeyEvent.VK_ENTER:
-					eraseCurr();
-					if(curr_name.equals("WeightBlock"))
-					{
-						while (canMoveDown()) {
-							y++;
-							for(int i=0;i<4;++i) {
-								board[y+1][x+i] = 0;
-							}
-						}
-					}
-					else if(curr_name.equals("BombBlock")) {
-						while (canMoveDown()) {
-							y++;
-						}
-					}
-					else if(curr_name.equals("ItemLBlock"))
-					{
-						while(canMoveDown())
-							y++;
-					}
-					else if(curr_name.equals("ItemVBlock"))
-					{
-						while(canMoveDown())
-							y++;
-					}
-					else if(curr_name.equals("TimeBlock")) {
-						while (canMoveDown()) {
-							y++;
-						}
-					}
-					else
-					{
-						while (canMoveDown()) {
-							y++;
-							scores += point*2;
-						}
-					}
+			if(keyCode == ((Number)(Main.SettingObject.get("K_UP"))).intValue()) {
+				eraseCurr(); // 현재 블록을 지웁니다.
+				if (canRotate()) { // 블록이 회전 가능한 경우에만 회전을 수행합니다.
+					curr.rotate(); // 현재 블록을 회전시킵니다.
 					placeBlock();
-					if(curr_name.equals("BombBlock"))
-					{
-						for(int i=-1;i<3;++i)
-						{
-							for(int j= -1;j<3;++j)
-							{
-								if(y+j < 0 || y + j > 19 || x+i <0 || x+i > 9)
-									continue;
-								board[y+j][x+i] = 0;
-							}
-						}
-						eraseCurr();
-					}
-					else if(curr_name.equals("ItemLBlock"))
-					{
-						System.out.println("당첨4");
-						for(int i=0;i<curr.width();++i)
-						{System.out.println("당첨5");
-							for(int j=0;j<curr.height();++j)
-							{
-								System.out.println(String.format("%d %d", x, y));
-								if(curr.getShape(i, j) == 4)
-								{System.out.println("당첨6");
-									Linei = i;
-									Linej = j;
-								}
-							}
-						}
-						for (int a = -9; a < 10; ++a) {
-							if (x + Linei + a < 0 || x + Linei + a > 9)
-								continue;
-							board[y + Linej][x + Linei + a] = 0;
-						}
-					}
-					else if(curr_name.equals("ItemVBlock"))
-					{
-						for(int i=0;i<curr.width();++i)
-						{
-							for(int j=0;j<curr.height();++j)
-							{
-								if(curr.getShape(i, j) == 5)
-								{
-									Linei = i;
-									Linej = j;
-								}
-							}
-						}
-						for (int b = -19; b < 20; ++b) {
-							if (y + Linej + b < 0 || y + Linej + b > 19)
-								continue;
-							board[y + Linej + b][x + Linei] = 0;
-						}
-					}
-					else if(curr_name.equals("TimeBlock"))
-					{
-						timer.stop();
-						timer.setDelay(initInterval); // 기본 속도 1000으로 초기화
-						timer.start();
-					}
-					checkLines();
-					curr = nextcurr;
-					nextcurr = getRandomBlock();
-					x = 3; // 새 블록의 x좌표를 시작 x 좌표를 설정합니다.
-					y = 0; // 새 블록의 y좌표를 시작 y 좌표를 설정합니다.
-					placeBlock();
-					drawBoard();
-					break;
-
-				case KeyEvent.VK_Q:
-					System.exit(0); // 'q' 키가 눌렸을 때, 프로그램을 종료합니다.
-
-					break;
+				}
+				drawBoard(); // 게임 보드를 다시 그립니다.
 			}
+			else if(keyCode == ((Number)(Main.SettingObject.get("K_DOWN"))).intValue()) {
+				moveDown(); // 아래 방향키가 눌렸을 때, 현재 블록을 아래로 이동시킵니다.
+				drawBoard(); // 게임 보드를 다시 그립니다.
+			}
+			else if(keyCode == ((Number)(Main.SettingObject.get("K_RIGHT"))).intValue()) {
+				moveRight(); // 오른쪽 방향키가 눌렸을 때, 현재 블록을 오른쪽으로 이동시킵니다.
+				drawBoard(); // 게임 보드를 다시 그립니다.
+			}
+			else if(keyCode == ((Number)(Main.SettingObject.get("K_LEFT"))).intValue()) {
+				moveLeft(); // 왼쪽 방향키가 눌렸을 때, 현재 블록을 왼쪽으로 이동시킵니다.
+				drawBoard(); // 게임 보드를 다시 그립니다.
+			}
+			else if(keyCode == ((Number)(Main.SettingObject.get("K_SPACE"))).intValue()) {
+				isPaused = !isPaused; // 게임의 상태를 전환합니다.
+				if (isPaused) {
+					timer.stop(); // 게임이 일시 중지된 경우, 타이머를 중지합니다.
+					pane.setText(String.format("Game Paused\nPress %s to continue", KeyEvent.getKeyText(((Number)Main.SettingObject.get("K_SPACE")).intValue()))); // 게임이 일시 중지된 상태를 표시합니다.
+				} else {
+					timer.start(); // 게임이 재개된 경우, 타이머를 시작합니다.
+				}
+			}
+			else if(keyCode == ((Number)(Main.SettingObject.get("K_ENTER"))).intValue()) {
+				eraseCurr();
+				if(curr_name.equals("WeightBlock"))
+				{
+					while (canMoveDown()) {
+						y++;
+						for(int i=0;i<4;++i) {
+							board[y+1][x+i] = 0;
+						}
+					}
+				}
+				else if(curr_name.equals("BombBlock")) {
+					while (canMoveDown()) {
+						y++;
+					}
+				}
+				else if(curr_name.equals("ItemLBlock"))
+				{
+					while(canMoveDown())
+						y++;
+				}
+				else if(curr_name.equals("ItemVBlock"))
+				{
+					while(canMoveDown())
+						y++;
+				}
+				else if(curr_name.equals("TimeBlock")) {
+					while (canMoveDown()) {
+						y++;
+					}
+				}
+				else
+				{
+					while (canMoveDown()) {
+						y++;
+						scores += point*2;
+					}
+				}
+				placeBlock();
+				if(curr_name.equals("BombBlock"))
+				{
+					for(int i=-1;i<3;++i)
+					{
+						for(int j= -1;j<3;++j)
+						{
+							if(y+j < 0 || y + j > 19 || x+i <0 || x+i > 9)
+								continue;
+							board[y+j][x+i] = 0;
+						}
+					}
+					eraseCurr();
+				}
+				else if(curr_name.equals("ItemLBlock"))
+				{
+					System.out.println("당첨4");
+					for(int i=0;i<curr.width();++i)
+					{System.out.println("당첨5");
+						for(int j=0;j<curr.height();++j)
+						{
+							System.out.println(String.format("%d %d", x, y));
+							if(curr.getShape(i, j) == 4)
+							{System.out.println("당첨6");
+								Linei = i;
+								Linej = j;
+							}
+						}
+					}
+					for (int a = -9; a < 10; ++a) {
+						if (x + Linei + a < 0 || x + Linei + a > 9)
+							continue;
+						board[y + Linej][x + Linei + a] = 0;
+					}
+				}
+				else if(curr_name.equals("ItemVBlock"))
+				{
+					for(int i=0;i<curr.width();++i)
+					{
+						for(int j=0;j<curr.height();++j)
+						{
+							if(curr.getShape(i, j) == 5)
+							{
+								Linei = i;
+								Linej = j;
+							}
+						}
+					}
+					for (int b = -19; b < 20; ++b) {
+						if (y + Linej + b < 0 || y + Linej + b > 19)
+							continue;
+						board[y + Linej + b][x + Linei] = 0;
+					}
+				}
+				else if(curr_name.equals("TimeBlock"))
+				{
+					timer.stop();
+					timer.setDelay(initInterval); // 기본 속도 1000으로 초기화
+					timer.start();
+				}
+				checkLines();
+				curr = nextcurr;
+				nextcurr = getRandomBlock();
+				x = 3; // 새 블록의 x좌표를 시작 x 좌표를 설정합니다.
+				y = 0; // 새 블록의 y좌표를 시작 y 좌표를 설정합니다.
+				placeBlock();
+				drawBoard();
+			}
+			else if(keyCode == ((Number)(Main.SettingObject.get("K_Q"))).intValue())
+			{
+				try (FileWriter file = new FileWriter(String.format(Main.path) + "/Tetris_game/src/Settings.json")) {
+					file.write(Main.SettingObject.toJSONString());
+					file.flush();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				System.exit(0); // 'q' 키가 눌렸을 때, 프로그램을 종료합니다.
+			}
+
 		}
 
 		@Override
