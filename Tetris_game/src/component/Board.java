@@ -203,11 +203,10 @@ public class Board extends JPanel {
 		}
 		else if(item == 1)
 		{
-			System.out.println(bricks);
-			if(create_item && bricks != 0 && bricks % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
+			if(create_item && lines != 0 && lines % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
 			{
 				create_item = false;
-				slot = rnd.nextInt(1);
+				slot = rnd.nextInt(5);
 				if(slot == 0) {
 					curr_name = nextcurr_name;
 					nextcurr_name = "WeightBlock";
