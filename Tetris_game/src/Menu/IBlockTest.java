@@ -72,21 +72,21 @@ public class IBlockTest
             }
         }
 
-            System.out.print("I : " + count[0]); // I형 블록의 개수 출력
-            System.out.print(", J : " + count[1]); // I형 블록의 개수 출력
-            System.out.print(", L : " + count[2]); // I형 블록의 개수 출력
-            System.out.print(", O : " + count[3]); // I형 블록의 개수 출력
-            System.out.print(", S : " + count[4]); // I형 블록의 개수 출력
-            System.out.print(", T : " + count[5]); // I형 블록의 개수 출력
-            System.out.println(", Z : " + count[6]); // I형 블록의 개수 출력
+        System.out.print("I : " + count[0]); // I형 블록의 개수 출력
+        System.out.print(", J : " + count[1]); // I형 블록의 개수 출력
+        System.out.print(", L : " + count[2]); // I형 블록의 개수 출력
+        System.out.print(", O : " + count[3]); // I형 블록의 개수 출력
+        System.out.print(", S : " + count[4]); // I형 블록의 개수 출력
+        System.out.print(", T : " + count[5]); // I형 블록의 개수 출력
+        System.out.println(", Z : " + count[6]); // I형 블록의 개수 출력
 
-            System.out.print("I : 1"); // I형 블록의 개수는 항상 1로 고정
-            System.out.print(", J : " + String.format("%.1f", (float)count[1]/count[0])); // I형 블록 대비 J형 블록의 비율 출력
-            System.out.print(", L : " + String.format("%.1f", (float)count[2]/count[0])); // I형 블록 대비 L형 블록의 비율 출력
-            System.out.print(", O : " + String.format("%.1f", (float)count[3]/count[0])); // I형 블록 대비 O형 블록의 비율 출력
-            System.out.print(", S : " + String.format("%.1f", (float)count[4]/count[0])); // I형 블록 대비 S형 블록의 비율 출력
-            System.out.print(", T : " + String.format("%.1f", (float)count[5]/count[0])); // I형 블록 대비 T형 블록의 비율 출력
-            System.out.print(", Z : " + String.format("%.1f", (float)count[6]/count[0])); // I형 블록 대비 Z형 블록의 비율 출력
+        System.out.print("I : 1"); // I형 블록의 개수는 항상 1로 고정
+        System.out.print(", J : " + String.format("%.1f", (float)count[1]/count[0])); // I형 블록 대비 J형 블록의 비율 출력
+        System.out.print(", L : " + String.format("%.1f", (float)count[2]/count[0])); // I형 블록 대비 L형 블록의 비율 출력
+        System.out.print(", O : " + String.format("%.1f", (float)count[3]/count[0])); // I형 블록 대비 O형 블록의 비율 출력
+        System.out.print(", S : " + String.format("%.1f", (float)count[4]/count[0])); // I형 블록 대비 S형 블록의 비율 출력
+        System.out.print(", T : " + String.format("%.1f", (float)count[5]/count[0])); // I형 블록 대비 T형 블록의 비율 출력
+        System.out.print(", Z : " + String.format("%.1f", (float)count[6]/count[0])); // I형 블록 대비 Z형 블록의 비율 출력
 
 
 
