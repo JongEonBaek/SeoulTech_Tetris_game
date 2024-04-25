@@ -208,18 +208,18 @@ public class Board extends JPanel {
 			if(bricks != 0 && bricks % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
 			{
 				slot = rnd.nextInt(3);
-				if(slot == -1) {
+				if(slot == 0) {
 					curr_name = nextcurr_name;
 					nextcurr_name = "WeightBlock";
 					return new WeightBlock();
 				}
-				else if(slot == -1)
+				else if(slot == 1)
 				{
 					curr_name = nextcurr_name;
 					nextcurr_name = "BombBlock";
 					return new BombBlock();
 				}
-				else
+				else if(slot == 2)
 				{
 					item = 0;
 					Block temp = getRandomBlock();
@@ -1108,19 +1108,24 @@ public class Board extends JPanel {
 					}
 					else if(curr_name.equals("ItemLBlock"))
 					{
+						System.out.println("당첨4");
 						for(int i=0;i<curr.width();++i)
-						{
+						{System.out.println("당첨5");
 							for(int j=0;j<curr.height();++j)
 							{
 								System.out.println(String.format("%d %d", x, y));
 								if(curr.getShape(i, j) == 4)
-								{
+								{System.out.println("당첨6");
 									Linei = i;
 									Linej = j;
 								}
 							}
 						}
-
+						for (int a = -9; a < 10; ++a) {
+							if (x + Linei + a < 0 || x + Linei + a > 9)
+								continue;
+							board[y + Linej][x + Linei + a] = 0;
+						}
 					}
 					checkLines();
 					curr = nextcurr;
