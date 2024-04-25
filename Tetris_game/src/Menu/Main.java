@@ -20,7 +20,7 @@ public class Main {
     public static JPanel mainPanel;
     public static CardLayout cardLayout;
     public static final int SCREEN_WIDTH[] = {1280, 460, 517, 368};
-    public static final int SCREEN_HEIGHT[] = {720, 740, 814, 592};
+    public static final int SCREEN_HEIGHT[] = {720, 740, 814, 610};
     public static MainMenuLabel1 mainMenu1;
     public static OptionsLabel1 optionMenu1;
     public static GameModeLabel1 gameMode1;

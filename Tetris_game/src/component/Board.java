@@ -107,8 +107,8 @@ public class Board extends JPanel {
 		timer = new Timer(initInterval, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				moveDown(); // 블록 아래로 이동
-				drawBoard(); // 보드 그리기
+						moveDown(); // 블록 아래로 이동
+						drawBoard(); // 보드 그리기
 
 			}
 		});
@@ -205,21 +205,27 @@ public class Board extends JPanel {
 		else if(item == 1)
 		{
 			System.out.println(bricks);
-			if(bricks != 0 && bricks % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
+			if(lines != 0 && lines % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
 			{
-				slot = rnd.nextInt(4);
-				if(slot == -1) {
+				slot = rnd.nextInt(5);
+				if(slot == 0) {
 					curr_name = nextcurr_name;
 					nextcurr_name = "WeightBlock";
 					return new WeightBlock();
 				}
-				else if(slot == -1)
+				else if(slot == 1)
 				{
 					curr_name = nextcurr_name;
 					nextcurr_name = "BombBlock";
 					return new BombBlock();
 				}
-				else if(slot == -1)
+				else if(slot == 2)
+				{
+					curr_name = nextcurr_name;
+					nextcurr_name = "TimeBlock";
+					return new TimeBlock();
+				}
+				else if(slot == 3)
 				{
 					item = 0;
 					Block temp = getRandomBlock();
@@ -230,7 +236,7 @@ public class Board extends JPanel {
 					nextcurr_name = "ItemLBlock";
 					return temp;
 				}
-				else
+				else if(slot == 4)
 				{
 					item = 0;
 					Block temp = getRandomBlock();
@@ -381,50 +387,6 @@ public class Board extends JPanel {
 	}
 
 
-	/*private void animateAndDeleteLines(ArrayList<Integer> a) {
-
-		final int[] count = {0};
-		isAnimationDone = false;
-		timers = new Timer(50, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// isAnimationDone이 false일 때만 실행
-					if (count[0] < 4) { // 1초 동안 총 6번의 변경 (5번의 빨간색/흰색 전환)
-						for (int line : a) {
-							Color color = (count[0] % 2 == 0) ? Color.RED : Color.WHITE;
-							Arrays.fill(color_board[line], color);
-						}
-
-						drawBoard(); // 보드 다시 그리기
-						count[0]++;
-					} else {
-						timers.stop();
-						// 애니메이션이 끝나면 실제로 줄을 삭제
-						for (int line : a) {
-							for (int k = line; k > 0; k--) {
-								board[k] = Arrays.copyOf(board[k - 1], WIDTH);
-								color_board[k] = Arrays.copyOf(color_board[k-1], WIDTH);
-							}
-						}
-
-						Arrays.fill(board[0], 0);
-						Arrays.fill(color_board[0], Color.WHITE);
-						drawBoard();
-
-
-						scores += 100 * a.size();
-						lines += a.size(); // 완성된 라인 수 증가
-						isAnimationDone = true; // 애니메이션 완료 후 true로 설정
-						timer.start();
-
-					}
-			}
-		});
-		if(!isAnimationDone)
-			timers.start();
-
-	}*/
-
 
 
 	// 현재 블록을 아래로 이동할 수 있는지 확인하는 메소드
@@ -531,6 +493,8 @@ public class Board extends JPanel {
 		int[] selected = positions.get(0);
 		board[selected[0]][selected[1]] = 5;
 	}
+
+
 	public static void replaceOneWithL(int[][] board) {
 		// '1' 위치를 저장할 리스트 생성
 		List<int[]> positions = new ArrayList<>();
@@ -557,7 +521,7 @@ public class Board extends JPanel {
 
 	// 현재 블록을 아래로 한 칸 이동시킨다. 만약 블록이 바닥이나 다른 블록에 닿았다면, 그 위치에 블록을 고정하고 새로운 블록 생성
 	protected void moveDown() {
-		System.out.println("mode : " + mode);
+
 		eraseCurr(); // 현재 블록의 위치를 한칸 내리기 위해 게임 보드에서 지웁니다.
 		int Linei = 0, Linej = 0;
 		if(curr_name.equals("WeightBlock"))
@@ -633,21 +597,39 @@ public class Board extends JPanel {
 					}
 				}
 			}
+			else if(curr_name.equals("TimeBlock"))
+			{
+
+				timer.stop();
+				timer.setDelay(initInterval); // 기본 속도 1000으로 초기화
+				timer.start();
+			}
 			if(!curr_name.equals("BombBlock")) {
 				placeBlock(); // 현재 위치에 블록을 고정시킵니다.
+
 				if(curr_name.equals("ItemLBlock")) {
 					for (int a = -9; a < 10; ++a) {
 						if (x + Linei + a < 0 || x + Linei + a > 9)
 							continue;
 						board[y + Linej][x + Linei + a] = 0;
+
 					}
+					for (int k = y + Linej; k > 0; k--) {
+						board[k] = Arrays.copyOf(board[k - 1], WIDTH);
+						color_board[k] = Arrays.copyOf(color_board[k - 1], WIDTH);
+					}
+
+
+
 				}
-				if(curr_name.equals("ItemVBlock")){
+
+				if(curr_name.equals("ItemVBlock")) {
 					for (int b = -19; b < 20; ++b) {
 						if (y + Linej + b < 0 || y + Linej + b > 19)
 							continue;
-						board[y + Linej + b][x + Linei] = 0;
+						board[y + Linej+b][x + Linei] = 0;
 					}
+
 				}
 			}
 
@@ -660,6 +642,8 @@ public class Board extends JPanel {
 			if (!canMoveDown()) { // 새 블록이 움직일 수 없는 경우 (게임 오버)
 				GameOver();
 			}
+
+			placeBlock();
 
 		}
 
@@ -793,20 +777,57 @@ public class Board extends JPanel {
 			doc.insertString(doc.getLength(), "\n", styleSet);
 
 
+
 			// 다음블럭을 처리하는 로직
 			for (int i = 0; i < 2; i++) {
 				//NEXT 블럭 표시
-				for (int k = 0; k < nextcurr.width(); k++) {
-					if (nextcurr.width() == 4 && i == 1) // "OOOO"만 너비가 4이므로 따로 처리
-						break;
-					if (nextcurr.getShape(k, i) == 1) {
-						StyleConstants.setForeground(styleSet, nextcurr.getColor());
-						doc.insertString(doc.getLength(), "O", styleSet);
-						StyleConstants.setForeground(styleSet, Color.WHITE);
-					} else doc.insertString(doc.getLength(), " ", styleSet);
+
+				if(nextcurr_name == "WeightBlock")// WeightBlock
+				{
+					for (int k = 0; k < nextcurr.width(); k++) {
+						if (nextcurr.getShape(k, i) == 1 ) {
+							doc.insertString(doc.getLength(), "O", styleSet);
+						}
+						else doc.insertString(doc.getLength(), " ", styleSet);
+					}
+				}
+				else {
+					for (int k = 0; k < nextcurr.width(); k++) {
+						if (nextcurr.width() == 4 && i == 1) // "OOOO"만 너비가 4이므로 따로 처리
+							break;
+						if (nextcurr.getShape(k, i) == 1) {
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "O", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+
+						} else if (nextcurr.getShape(k, i) == 2) {//BombBlock
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "B", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+						}
+						else if (nextcurr.getShape(k, i) == 3) {//BombBlock
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "T", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+						}
+						else if (nextcurr.getShape(k, i) == 4){
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "L", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+						}
+						else if (nextcurr.getShape(k, i) == 5){
+							StyleConstants.setForeground(styleSet, nextcurr.getColor());
+							doc.insertString(doc.getLength(), "V", styleSet);
+							StyleConstants.setForeground(styleSet, Color.WHITE);
+						}
+						else doc.insertString(doc.getLength(), " ", styleSet);
+					}
 				}
 				doc.insertString(doc.getLength(), "\n", styleSet);
 			}
+
+
+
 
 			//공백추가
 			for (int i = 0; i < 7; i++) {
@@ -866,7 +887,7 @@ public class Board extends JPanel {
 
 		switch (mode) {
 			case 0:  //easy
-				if (bricks == 20 || bricks == 50 || bricks == 100 || bricks == 200) {
+				if (bricks == 20 || bricks == 40 || bricks == 60 || bricks == 80) {
 					level++;
 					point++;
 					timer.stop();
@@ -876,7 +897,7 @@ public class Board extends JPanel {
 				}
 				break;
 			case 1:
-				if (bricks == 20 || bricks == 50 || bricks == 100 || bricks == 200) {
+				if (bricks == 20 || bricks == 40 || bricks == 60 || bricks == 80) {
 					level++;
 					point++;
 					timer.stop();
@@ -886,7 +907,7 @@ public class Board extends JPanel {
 				}
 				break;
 			case 2:
-				if (bricks == 20 || bricks == 50 || bricks == 100 || bricks == 200) {
+				if (bricks == 20 || bricks == 40 || bricks == 60 || bricks == 80) {
 					level++;
 					point++;
 					timer.stop();
@@ -941,7 +962,7 @@ public class Board extends JPanel {
 		newScreen.requestFocusInWindow(); // 새 화면에게 포커스 요청
 	}
 
-
+	
 	// 게임 종료 이벤트
 	public void GameOver() {
 		timer.stop(); // 타이머를 멈춥니다.
@@ -957,7 +978,7 @@ public class Board extends JPanel {
 				name = JOptionPane.showInputDialog(this, "이름을 입력하세요:"); // 이름입력하는 대화상자
 				//정상적으로 이름을 입력했다면
 				if (name != null && !name.isEmpty()) {
-					switchToScreen(Main.mainMenu1);
+
 
 					JSONArray scoreList = new JSONArray();
 					JSONParser parser = new JSONParser();
@@ -986,8 +1007,6 @@ public class Board extends JPanel {
 					scoreData.put("recent", 1); // 가장 최근에 끝난 게임임을 알려주는 심볼
 					scoreList.add(scoreData);
 
-					Main.classicScoreBoard1.update();
-
 					// 파일에 새 데이터 쓰기
 					try (FileWriter file = new FileWriter("Tetris_game/src/ClassicScoreData.json")) {
 						file.write(scoreList.toJSONString());
@@ -995,6 +1014,9 @@ public class Board extends JPanel {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+
+					Main.classicScoreBoard1.update();
+					switchToScreen(Main.classicScoreBoard1);
 
 					System.out.println(name);
 					System.out.println(scores);
@@ -1023,7 +1045,7 @@ public class Board extends JPanel {
 				name = JOptionPane.showInputDialog(this, "이름을 입력하세요:"); // 이름입력하는 대화상자
 				//정상적으로 이름을 입력했다면
 				if (name != null && !name.isEmpty()) {
-					switchToScreen(Main.mainMenu1);
+
 
 					JSONArray scoreList = new JSONArray();
 					JSONParser parser = new JSONParser();
@@ -1052,8 +1074,6 @@ public class Board extends JPanel {
 					scoreData.put("recent", 1); // 가장 최근에 끝난 게임임을 알려주는 심볼
 					scoreList.add(scoreData);
 
-					Main.classicScoreBoard1.update();
-
 					// 파일에 새 데이터 쓰기
 					try (FileWriter file = new FileWriter("Tetris_game/src/ItemScoreData.json")) {
 						file.write(scoreList.toJSONString());
@@ -1062,13 +1082,19 @@ public class Board extends JPanel {
 						e.printStackTrace();
 					}
 
+					Main.itemScoreBoard1.update();
+
+					switchToScreen(Main.itemScoreBoard1);
+
 					System.out.println(name);
 					System.out.println(scores);
 					System.out.println(mode);
 
-				} else // 빈칸을 입력했거나, 이름입력대화상자에서 취소 눌렀을 때
+
+				} else { // 빈칸을 입력했거나, 이름입력대화상자에서 취소 눌렀을 때
 					Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
-				switchToScreen(Main.mainMenu1);
+					switchToScreen(Main.mainMenu1);
+				}
 
 			} else if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) { //점수 저장하시겠습니까? -> No일 때
 				Main.frame.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
@@ -1081,9 +1107,9 @@ public class Board extends JPanel {
 
 
 
-
-
-
+	
+	
+	
 	public class PlayerKeyListener implements KeyListener {
 		@Override
 		public void keyTyped(KeyEvent e) {
@@ -1151,11 +1177,16 @@ public class Board extends JPanel {
 						while(canMoveDown())
 							y++;
 					}
+					else if(curr_name.equals("TimeBlock")) {
+						while (canMoveDown()) {
+							y++;
+						}
+					}
 					else
 					{
 						while (canMoveDown()) {
 							y++;
-							scores += point;
+							scores += point*2;
 						}
 					}
 					placeBlock();
@@ -1211,6 +1242,12 @@ public class Board extends JPanel {
 								continue;
 							board[y + Linej + b][x + Linei] = 0;
 						}
+					}
+					else if(curr_name.equals("TimeBlock"))
+					{
+						timer.stop();
+						timer.setDelay(initInterval); // 기본 속도 1000으로 초기화
+						timer.start();
 					}
 					checkLines();
 					curr = nextcurr;

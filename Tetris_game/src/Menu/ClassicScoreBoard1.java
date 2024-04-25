@@ -81,7 +81,7 @@ public class ClassicScoreBoard1 extends JPanel implements KeyListener {
             JSONObject score = (JSONObject) sortedScoreArray.get(i);
             scoreTable.add(new JLabel(String.valueOf(i + 1), SwingConstants.CENTER));
             scoreTable.add(new JLabel((String) score.get("name"), SwingConstants.CENTER));
-            scoreTable.add(new JLabel(String.valueOf(score.get("item")).equals("1") ? "Item" : "Normal", SwingConstants.CENTER));
+            scoreTable.add(new JLabel(String.valueOf(score.get("item")).equals("1") ? "Item" : "Classic", SwingConstants.CENTER));
             scoreTable.add(new JLabel(String.valueOf(score.get("mode")).equals("0") ? "Easy" : String.valueOf(score.get("mode")).equals("1") ? "Normal" : "Hard" , SwingConstants.CENTER));
             scoreTable.add(new JLabel(String.valueOf(score.get("scores")), SwingConstants.CENTER));
         }
@@ -105,7 +105,7 @@ public class ClassicScoreBoard1 extends JPanel implements KeyListener {
 
         this.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
         this.setLayout(new BorderLayout());
-        JLabel title = new JLabel("Normal Score Board");
+        JLabel title = new JLabel("Classic Score Board");
         title.setFont(new Font("Arial", 1, Main.SCREEN_WIDTH[0] / 40));
         title.setForeground(Color.BLACK);
         title.setBounds(Main.SCREEN_WIDTH[0] / 2 - 200, Main.SCREEN_HEIGHT[0] / 20, 400, 50);
@@ -164,7 +164,7 @@ public class ClassicScoreBoard1 extends JPanel implements KeyListener {
             if(String.valueOf(score.get("recent")).equals("0")) {
                 scoreTable.add(new JLabel(String.valueOf(i + 1), SwingConstants.CENTER));
                 scoreTable.add(new JLabel((String) score.get("name"), SwingConstants.CENTER));
-                scoreTable.add(new JLabel(String.valueOf(score.get("item")).equals("1") ? "Item" : "Normal", SwingConstants.CENTER));
+                scoreTable.add(new JLabel(String.valueOf(score.get("item")).equals("1") ? "Item" : "Classic", SwingConstants.CENTER));
                 scoreTable.add(new JLabel(String.valueOf(score.get("mode")).equals("0") ? "Easy" : String.valueOf(score.get("mode")).equals("1") ? "Normal" : "Hard", SwingConstants.CENTER));
                 scoreTable.add(new JLabel(String.valueOf(score.get("scores")), SwingConstants.CENTER));
             }
@@ -172,7 +172,7 @@ public class ClassicScoreBoard1 extends JPanel implements KeyListener {
             {
                 scoreTable.add(new JLabel("*" + String.valueOf(i + 1) + "*", SwingConstants.CENTER));
                 scoreTable.add(new JLabel("*" + ((String) score.get("name")) +"*", SwingConstants.CENTER));
-                scoreTable.add(new JLabel("*" + (String.valueOf(score.get("item")).equals("1") ? "Item" : "Normal") + "*", SwingConstants.CENTER));
+                scoreTable.add(new JLabel("*" + (String.valueOf(score.get("item")).equals("1") ? "Item" : "Classic") + "*", SwingConstants.CENTER));
                 scoreTable.add(new JLabel("*" + (String.valueOf(score.get("mode")).equals("0") ? "Easy" : String.valueOf(score.get("mode")).equals("1") ? "Normal" : "Hard") +"*", SwingConstants.CENTER));
                 scoreTable.add(new JLabel("*" + (String.valueOf(score.get("scores"))) +"*", SwingConstants.CENTER));
             }
