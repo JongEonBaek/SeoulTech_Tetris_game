@@ -577,7 +577,7 @@ public class Board extends JPanel {
 					for(int j=0;j<curr.height();++j)
 					{
 						System.out.println(String.format("%d %d", x, y));
-						if(curr.getShape(i, j) == 4);
+						if(curr.getShape(i, j) == 4)
 						{
 							Linei = i;
 							Linej = j;
@@ -587,7 +587,7 @@ public class Board extends JPanel {
 			}
 			if(!curr_name.equals("BombBlock")) {
 				placeBlock(); // 현재 위치에 블록을 고정시킵니다.
-				if(curr_name.equals("ItemLBlcok")) {
+				if(curr_name.equals("ItemLBlock")) {
 					for (int a = -9; a < 10; ++a) {
 						if (x + Linei + a < 0 || x + Linei + a > 9)
 							continue;
@@ -1031,6 +1031,7 @@ public class Board extends JPanel {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
+			int Linei = 0, Linej = 0;
 			// 키가 눌렸을 때의 동작을 정의합니다.
 			switch (e.getKeyCode()) { // 눌린 키에 따라 적절한 동작을 수행합니다.
 				case KeyEvent.VK_DOWN:
@@ -1079,7 +1080,11 @@ public class Board extends JPanel {
 							y++;
 						}
 					}
-
+					else if(curr_name.equals("ItemLBlock"))
+					{
+						while(canMoveDown())
+							y++;
+					}
 					else
 					{
 						while (canMoveDown()) {
@@ -1100,6 +1105,22 @@ public class Board extends JPanel {
 							}
 						}
 						eraseCurr();
+					}
+					else if(curr_name.equals("ItemLBlock"))
+					{
+						for(int i=0;i<curr.width();++i)
+						{
+							for(int j=0;j<curr.height();++j)
+							{
+								System.out.println(String.format("%d %d", x, y));
+								if(curr.getShape(i, j) == 4)
+								{
+									Linei = i;
+									Linej = j;
+								}
+							}
+						}
+
 					}
 					checkLines();
 					curr = nextcurr;
