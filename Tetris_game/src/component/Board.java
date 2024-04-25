@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import Menu.Main;
@@ -51,6 +52,8 @@ public class Board extends JPanel {
 	private boolean isPaused = false; // 게임이 일시 중지되었는지 나타내는 변수
 	private JTextPane nextpane;// 넥스트블록 표시하는 판
 	private int[][] board; // 게임 보드의 상태를 나타내는 2차원 배열
+
+	private Color[][] color_board;
 	private Block curr; // 현재 움직이고 있는 블록
 	private String curr_name = "";
 	private String nextcurr_name = "";
@@ -60,6 +63,8 @@ public class Board extends JPanel {
 	public int item = 0; // itemMode 0 == false(보통모드), 1 == true(아이템모드);
 	public boolean gameOver = false; // 게임오버를 알려주는변수 true == 게임오버
 
+	private Timer timers = null;
+	private boolean isAnimationDone = true; // 새로운 멤버 변수 추가
 	public boolean weightblockLock = false;
 
 	// 생성자 Board, 게임 창 설정 및 초기게임 보드 준비, 첫 번째 블록 생성하고, 타이머 시작
@@ -106,6 +111,12 @@ public class Board extends JPanel {
 
 		//Initialize board for the game.
 		board = new int[HEIGHT][WIDTH]; // 게임 보드 초기화
+		color_board = new Color[HEIGHT][WIDTH];
+		for(int i=0;i<HEIGHT;i++){
+			for(int j=0;j<WIDTH;j++){
+				color_board[i][j]=Color.white;
+			}
+		} // color_board 초기화
 		playerKeyListener = new PlayerKeyListener(); // 플레이어 키 리스너를 생성
 		addKeyListener(playerKeyListener); //키 리스너 추가
 		setFocusable(true); // 키 입력을 받을 수 있도록 설정
@@ -332,6 +343,8 @@ public class Board extends JPanel {
 
 
 	private void checkLines() {
+		ArrayList<Integer> fullLines = new ArrayList<>();
+
 		for (int i = HEIGHT - 1; i >= 0; i--) {
 			boolean lineFull = true;
 			for (int j = 0; j < WIDTH; j++) {
@@ -341,15 +354,63 @@ public class Board extends JPanel {
 				}
 			}
 			if (lineFull) {
-				for (int k = i; k > 0; k--) {
-					board[k] = Arrays.copyOf(board[k - 1], WIDTH);
-				}
-				Arrays.fill(board[0], 0);
-				scores += 100;
-				lines++; // 완성된 라인 수 증가
+				fullLines.add(i);
 			}
 		}
+
+		if (!fullLines.isEmpty()) {
+			timer.stop();
+			animateAndDeleteLines(fullLines);
+
+
+		}
 	}
+
+	private void animateAndDeleteLines(ArrayList<Integer> a) {
+
+		final int[] count = {0};
+		isAnimationDone = false;
+		timers = new Timer(50, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// isAnimationDone이 false일 때만 실행
+				if (count[0] < 4) { // 1초 동안 총 6번의 변경 (5번의 빨간색/흰색 전환)
+					for (int line : a) {
+						Color color = (count[0] % 2 == 0) ? Color.RED : Color.WHITE;
+						Arrays.fill(color_board[line], color);
+					}
+
+					drawBoard(); // 보드 다시 그리기
+					count[0]++;
+				} else {
+					timers.stop();
+					// 애니메이션이 끝나면 실제로 줄을 삭제
+					for (int line : a) {
+						for (int k = line; k > 0; k--) {
+							board[k] = Arrays.copyOf(board[k - 1], WIDTH);
+							color_board[k] = Arrays.copyOf(color_board[k-1], WIDTH);
+						}
+					}
+
+					Arrays.fill(board[0], 0);
+					Arrays.fill(color_board[0], Color.WHITE);
+					drawBoard();
+
+
+					scores += 100 * a.size();
+					lines += a.size(); // 완성된 라인 수 증가
+					isAnimationDone = true; // 애니메이션 완료 후 true로 설정
+					timer.start();
+
+				}
+			}
+		});
+		if(!isAnimationDone)
+			timers.start();
+
+	}
+
+
 
 	// 현재 블록을 아래로 이동할 수 있는지 확인하는 메소드
 	private boolean canMoveDown() {
@@ -489,6 +550,9 @@ public class Board extends JPanel {
 			y = 0; // 새 블록의 y좌표를 시작 y 좌표를 설정합니다.
 			if (!canMoveDown()) { // 새 블록이 움직일 수 없는 경우 (게임 오버)
 				GameOver();
+			}
+			if(isAnimationDone) {
+				placeBlock();
 			}
 		}
 		placeBlock(); // 게임 보드에 현재 블록의 새 위치를 표시합니다.
