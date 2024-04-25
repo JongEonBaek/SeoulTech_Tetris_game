@@ -9,13 +9,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
 
+import static Menu.Main.SettingObject;
 import static Menu.Main.isColorBlindnessMode;
 
 public class OptionsLabel1 extends JPanel implements KeyListener {
     private int currentIndex = 0; // 현재 선택된 메뉴 인덱스
     private final String cursorSymbol = "> "; // 현재 선택된 메뉴룰 따라갈 커서
     private final String nonSelected = "  "; // 커서가 있을 위치
-    private final String[] labels = {"Main Menu", String.format("Screen : %d x %d",  Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]), "Controls", "Color Blindness Mode", "Reset"}; // 메인 메뉴에 있을 서브 메뉴들.
+    private final String[] labels = {"Main Menu", String.format("Screen : %d x %d", ((Number)SettingObject.get("Screen")).intValue(), ((Number)SettingObject.get("Screen")).intValue()*37/23), "Controls", "Color Blindness Mode", "Reset"}; // 메인 메뉴에 있을 서브 메뉴들.
     java.util.List<JLabel> menuItems;
     public final JLabel optionLabel1;
 
@@ -94,6 +95,7 @@ public class OptionsLabel1 extends JPanel implements KeyListener {
             showTemporaryMessage(String.format("<html>Invalid Key Input. <br>Please press %s, %s, Enter</html>",
                     KeyEvent.getKeyText(((Number)Main.SettingObject.get("K_UP")).intValue()),
                     KeyEvent.getKeyText(((Number)Main.SettingObject.get("K_DOWN")).intValue())));
+        labels[1] = String.format("Screen : %d x %d", ((Number)SettingObject.get("Screen")).intValue(), ((Number)SettingObject.get("Screen")).intValue()*37/23);
         updateMenuDisplay();
     }
 
@@ -110,10 +112,15 @@ public class OptionsLabel1 extends JPanel implements KeyListener {
                 // 다시 메인메뉴로 이동함.
                 break;
             case 1:
-                System.out.println("Screen"); // 키설정을 바꾸는 로직 추가.
-                Main.frame.setSize(Main.SCREEN_WIDTH[1], Main.SCREEN_HEIGHT[1]);
-                Main.SettingObject.put("Screen", 1024);
-                switchToScreen(Main.optionMenu2);
+                System.out.println("Screen"); // 게임 화면의 크기를 바꾸는 곳.
+                if(((Number)SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[1])
+                    Main.SettingObject.put("Screen", Main.SCREEN_WIDTH[2]);
+                else if(((Number)SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[2])
+                    Main.SettingObject.put("Screen", Main.SCREEN_WIDTH[3]);
+                else if(((Number)SettingObject.get("Screen")).intValue() == Main.SCREEN_WIDTH[3])
+                    Main.SettingObject.put("Screen", Main.SCREEN_WIDTH[1]);
+                else
+                    System.out.println("ERRORRORORORORORORORORORORO!!!!!!");
                 break;
             case 2: // Exits
                 System.out.println("Controls");
