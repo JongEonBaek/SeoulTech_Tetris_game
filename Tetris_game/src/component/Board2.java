@@ -63,9 +63,6 @@ public class Board2 extends JPanel {
 	public int mode = 1; // 난이도 설정 easy == 0, normal == 1, hard == 2;
 	public int item = 0; // itemMode 0 == false(보통모드), 1 == true(아이템모드);
 	public boolean gameOver = false; // 게임오버를 알려주는변수 true == 게임오버
-	private Timer timers = null;
-
-	private boolean isAnimationDone = true; // 새로운 멤버 변수 추가
 
 	public boolean weightblockLock = false;
 
