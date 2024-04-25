@@ -1,6 +1,4 @@
-package Menu;
-
-import blocks.*;
+package Test;
 
 import java.util.Random;
 

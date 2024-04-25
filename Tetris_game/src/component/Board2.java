@@ -65,9 +65,6 @@ public class Board2 extends JPanel {
 	public int item = 0; // itemMode 0 == false(보통모드), 1 == true(아이템모드);
 	public boolean gameOver = false; // 게임오버를 알려주는변수 true == 게임오버
 	public boolean isfirst = true;
-	private Timer timers = null;
-
-	private boolean isAnimationDone = true; // 새로운 멤버 변수 추가
 
 	public boolean weightblockLock = false;
 
@@ -732,6 +729,12 @@ public class Board2 extends JPanel {
 						StyleConstants.setForeground(styleSet, Color.WHITE);
 					}
 					else if(board[i][j] == 4)
+					{
+						StyleConstants.setForeground(styleSet, color_board[i][j]);
+						doc.insertString(doc.getLength(), Character.toString(" OBTLVTOXXXXXXX".charAt(board[i][j])), styleSet);
+						StyleConstants.setForeground(styleSet, Color.WHITE);
+					}
+					else if(board[i][j] == 3)
 					{
 						StyleConstants.setForeground(styleSet, color_board[i][j]);
 						doc.insertString(doc.getLength(), Character.toString(" OBTLVTOXXXXXXX".charAt(board[i][j])), styleSet);
