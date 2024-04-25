@@ -8,7 +8,6 @@ import java.awt.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -66,7 +65,7 @@ public class Main {
             System.out.println("color_blind : " + SettingObject.get("color_blind"));
 
             // "color_blind" 값 읽기
-            isColorBlindnessMode = (Boolean) SettingObject.get("color_blind");
+            isColorBlindnessMode = SettingObject.get("color_blind").toString().equals("On") ? true : false;
             Board.colorBlindMode = isColorBlindnessMode;
             if(Board.colorBlindMode) {Board.setColorBlindMode(true);}
 

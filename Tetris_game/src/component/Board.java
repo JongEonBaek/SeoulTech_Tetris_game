@@ -497,7 +497,29 @@ public class Board extends JPanel {
 		curr.rotate();
 		return true;
 	}
+	public static void replaceOneWithV(int[][] board) {
+		// '1' 위치를 저장할 리스트 생성
+		List<int[]> positions = new ArrayList<>();
 
+		// 배열을 탐색하여 '1'의 위치를 찾는다
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == 1) {
+					positions.add(new int[]{i, j});
+				}
+			}
+		}
+
+		// '1'이 하나도 없으면 함수를 종료
+		if (positions.isEmpty()) {
+			return;
+		}
+
+		// '1'의 위치 중 무작위로 하나를 선택하여 'L'로 변경
+		Collections.shuffle(positions);
+		int[] selected = positions.get(0);
+		board[selected[0]][selected[1]] = 5;
+	}
 	public static void replaceOneWithL(int[][] board) {
 		// '1' 위치를 저장할 리스트 생성
 		List<int[]> positions = new ArrayList<>();
