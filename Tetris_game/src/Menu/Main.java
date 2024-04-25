@@ -93,7 +93,6 @@ public class Main {
         optionMenu1 = new OptionsLabel1();
         optionMenu1.setName("Options1");
 
-
         gameMode1 = new GameModeLabel1();
         gameMode1.setName("GameMode1");
 

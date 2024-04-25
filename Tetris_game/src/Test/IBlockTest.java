@@ -97,7 +97,7 @@ public class IBlockTest
 
         IBlockTest test = new IBlockTest();
 
-        test.Test(2); // easy : 0, normal : 1, hard : 2
+        test.Test(0); // easy : 0, normal : 1, hard : 2
 
     }
 
