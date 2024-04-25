@@ -207,8 +207,8 @@ public class Board3 extends JPanel {
 			System.out.println(bricks);
 			if(bricks != 0 && bricks % 10 == 0) // 일단은 10번째마다 무게추 블록이 나오도록. 나중에 변경 예정.
 			{
-				slot = rnd.nextInt(4);
-				if(slot == 0) {
+				slot = rnd.nextInt(1);
+				if(slot == 5) {
 					curr_name = nextcurr_name;
 					nextcurr_name = "WeightBlock";
 					return new WeightBlock();
@@ -234,6 +234,17 @@ public class Board3 extends JPanel {
 					item = 1;
 					curr_name = nextcurr_name;
 					nextcurr_name = "ItemLBlock";
+					return temp;
+				}
+				else if(slot == 0)
+				{
+					item = 0;
+					Block temp = getRandomBlock();
+					bricks--;
+					replaceOneWithV(temp.shape);
+					item = 1;
+					curr_name = nextcurr_name;
+					nextcurr_name = "ItemVBlock";
 					return temp;
 				}
 			}
@@ -477,11 +488,13 @@ public class Board3 extends JPanel {
 			return;
 		}
 
-		// '1'의 위치 중 무작위로 하나를 선택하여 'L'로 변경
+		// '1'의 위치 중 무작위로 하나를 선택하여 'V'로 변경
 		Collections.shuffle(positions);
 		int[] selected = positions.get(0);
 		board[selected[0]][selected[1]] = 5;
 	}
+
+
 	public static void replaceOneWithL(int[][] board) {
 		// '1' 위치를 저장할 리스트 생성
 		List<int[]> positions = new ArrayList<>();
@@ -569,6 +582,21 @@ public class Board3 extends JPanel {
 					}
 				}
 			}
+			else if(curr_name.equals("ItemVBlock"))
+			{
+				for(int i=0;i<curr.width();++i)
+				{
+					for(int j=0;j<curr.height();++j)
+					{
+						System.out.println(String.format("%d %d", x, y));
+						if(curr.getShape(i, j) == 5)
+						{
+							Linei = i;
+							Linej = j;
+						}
+					}
+				}
+			}
 			else if(curr_name.equals("TimeBlock"))
 			{
 
@@ -583,6 +611,13 @@ public class Board3 extends JPanel {
 						if (x + Linei + a < 0 || x + Linei + a > 9)
 							continue;
 						board[y + Linej][x + Linei + a] = 0;
+					}
+				}
+				if(curr_name.equals("ItemVBlock")) {
+					for (int b = -19; b < 20; ++b) {
+						if (y + Linej + b < 0 || y + Linej + b > 19)
+							continue;
+						board[y + Linej+b][x + Linei] = 0;
 					}
 				}
 			}
@@ -675,29 +710,29 @@ public class Board3 extends JPanel {
 			for (int i = 0; i < board.length; i++) {
 				doc.insertString(doc.getLength(), "X", styleSet);
 				for (int j = 0; j < board[i].length; j++) {
-					if(board[i][j] == 4)
+					if(board[i][j] == 5)
 					{
 						StyleConstants.setForeground(styleSet, color_board[i][j]);
-						doc.insertString(doc.getLength(), Character.toString(" OBTLDTOXXXXXXX".charAt(board[i][j])), styleSet);
+						doc.insertString(doc.getLength(), Character.toString(" OBTLVTOXXXXXXX".charAt(board[i][j])), styleSet);
+						StyleConstants.setForeground(styleSet, Color.WHITE);
+					}
+					else if(board[i][j] == 4)
+					{
+						StyleConstants.setForeground(styleSet, color_board[i][j]);
+						doc.insertString(doc.getLength(), Character.toString(" OBTLVTOXXXXXXX".charAt(board[i][j])), styleSet);
 						StyleConstants.setForeground(styleSet, Color.WHITE);
 					}
 					else if(board[i][j] == 2)
 					{
 						StyleConstants.setForeground(styleSet, color_board[i][j]);
-						doc.insertString(doc.getLength(), Character.toString(" OBTLDTOXXXXXXX".charAt(board[i][j])), styleSet);
+						doc.insertString(doc.getLength(), Character.toString(" OBTLVTOXXXXXXX".charAt(board[i][j])), styleSet);
 						StyleConstants.setForeground(styleSet, Color.WHITE);
 					}
 					else if (board[i][j] == 1) {
 						StyleConstants.setForeground(styleSet, color_board[i][j]);
-						doc.insertString(doc.getLength(), Character.toString(" OBTLDTOXXXXXXX".charAt(board[i][j])), styleSet);
+						doc.insertString(doc.getLength(), Character.toString(" OBTLVTOXXXXXXX".charAt(board[i][j])), styleSet);
 						StyleConstants.setForeground(styleSet, Color.WHITE);
-					}
-					else if(board[i][j] == 3)
-					{
-						StyleConstants.setForeground(styleSet, color_board[i][j]);
-						doc.insertString(doc.getLength(), "T", styleSet);
-						StyleConstants.setForeground(styleSet, Color.WHITE);
-					}else {
+					} else {
 						doc.insertString(doc.getLength(), " ", styleSet);
 					}
 				}
@@ -1111,6 +1146,11 @@ public class Board3 extends JPanel {
 						while(canMoveDown())
 							y++;
 					}
+					else if(curr_name.equals("ItemVBlock"))
+					{
+						while(canMoveDown())
+							y++;
+					}
 					else if(curr_name.equals("TimeBlock")) {
 						while (canMoveDown()) {
 							y++;
@@ -1156,6 +1196,25 @@ public class Board3 extends JPanel {
 							if (x + Linei + a < 0 || x + Linei + a > 9)
 								continue;
 							board[y + Linej][x + Linei + a] = 0;
+						}
+					}
+					else if(curr_name.equals("ItemVBlock"))
+					{
+						for(int i=0;i<curr.width();++i)
+						{
+							for(int j=0;j<curr.height();++j)
+							{
+								if(curr.getShape(i, j) == 5)
+								{
+									Linei = i;
+									Linej = j;
+								}
+							}
+						}
+						for (int b = -19; b < 20; ++b) {
+							if (y + Linej + b < 0 || y + Linej + b > 19)
+								continue;
+							board[y + Linej + b][x + Linei] = 0;
 						}
 					}
 					else if(curr_name.equals("TimeBlock"))
