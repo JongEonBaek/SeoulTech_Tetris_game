@@ -526,7 +526,7 @@ public class Board extends JPanel {
 	protected void moveDown() {
 		System.out.println("mode : " + mode);
 		eraseCurr(); // 현재 블록의 위치를 한칸 내리기 위해 게임 보드에서 지웁니다.
-		int Linei = 0, Linej = 0; // ItemLBlock에서 블록을 배치한 후 지우기 위해 'L'이 들어있는 위치를 추적함.
+		int Linei = 0, Linej = 0;
 		if(curr_name.equals("WeightBlock"))
 		{
 			if(canMoveDown())
@@ -1065,7 +1065,6 @@ public class Board extends JPanel {
 					break;
 				case KeyEvent.VK_ENTER:
 					eraseCurr();
-					int Linei = 0, Linej = 0; // ItemLBlock에서 블록을 배치한 후 지우기 위해 'L'이 들어있는 위치를 추적함.
 					if(curr_name.equals("WeightBlock"))
 					{
 						while (canMoveDown()) {
@@ -1080,11 +1079,7 @@ public class Board extends JPanel {
 							y++;
 						}
 					}
-					else if(curr_name.equals("ItemLBlock"))
-					{
-						while(canMoveDown())
-							y++;
-					}
+
 					else
 					{
 						while (canMoveDown()) {
@@ -1105,26 +1100,6 @@ public class Board extends JPanel {
 							}
 						}
 						eraseCurr();
-					}
-					else if(curr_name.equals("ItemLBlock"))
-					{
-						for(int i=0;i<curr.width();++i)
-						{
-							for(int j=0;j<curr.height();++j)
-							{
-								System.out.println(String.format("%d %d", x, y));
-								if(curr.getShape(i, j) == 4);
-								{
-									Linei = i;
-									Linej = j;
-								}
-							}
-						}
-						for (int a = -9; a < 10; ++a) {
-							if (x + Linei + a < 0 || x + Linei + a > 9)
-								continue;
-							board[y + Linej][x + Linei + a] = 0;
-						}
 					}
 					checkLines();
 					curr = nextcurr;
