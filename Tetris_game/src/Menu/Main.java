@@ -52,7 +52,7 @@ public class Main {
         System.out.println(System.getProperty("user.dir"));
         path = System.getProperty("user.dir");
 
-        try (FileReader reader = new FileReader("Tetris_game/src/Settings.json")) {
+        try (FileReader reader = new FileReader(String.format(Main.path) + "/Tetris_game/src/Settings.json")) {
             // 파일로부터 JSON 객체를 읽어오기
             SettingObject = (JSONObject) parser.parse(reader);
 
@@ -170,7 +170,7 @@ public class Main {
         frame.setVisible(true);
 
         // 밑에는 EXIT버튼이 아니라 종료버튼을 눌러서 나갔을 때 저장되게
-        try (FileWriter file = new FileWriter("Tetris_game/src/Settings.json")) {
+        try (FileWriter file = new FileWriter(String.format(Main.path) + "/Tetris_game/src/Settings.json")) {
             file.write(SettingObject.toJSONString());
             file.flush();
         } catch (Exception e) {

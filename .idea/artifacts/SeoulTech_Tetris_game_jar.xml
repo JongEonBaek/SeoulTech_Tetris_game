@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="SeoulTech_Tetris_game:jar">
+    <output-path>$PROJECT_DIR$/../..</output-path>
+    <root id="root">
+      <element id="archive" name="SeoulTech_Tetris_game.jar">
+        <element id="module-output" name="SeoulTech_Tetris_game" />
+      </element>
+      <element id="file-copy" path="$PROJECT_DIR$/json-simple-1.1.1.jar" />
+    </root>
+  </artifact>
+</component>

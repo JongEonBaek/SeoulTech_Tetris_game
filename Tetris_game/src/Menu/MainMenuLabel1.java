@@ -22,7 +22,7 @@ public class MainMenuLabel1 extends JPanel implements KeyListener {
 
         menuItems = new ArrayList<>();
 
-        ImageIcon backgroundIcon = new ImageIcon(Main.class.getResource("../images/introBackground.jpg"));
+        ImageIcon backgroundIcon = new ImageIcon(Main.path + "/Tetris_game/src/images/introBackground.jpg");
         mainLabel = new JLabel(new ImageIcon(backgroundIcon.getImage().getScaledInstance(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0], Image.SCALE_SMOOTH)));
         mainLabel.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
 
@@ -113,7 +113,7 @@ public class MainMenuLabel1 extends JPanel implements KeyListener {
                 break;
             case 3: // Exits 버튼을 누르면 저장되게
                 System.out.println("Exit Selected");
-                try (FileWriter file = new FileWriter("Tetris_game/src/Settings.json")) {
+                try (FileWriter file = new FileWriter(String.format(Main.path) + "/Tetris_game/src/Settings.json")) {
                     file.write(Main.SettingObject.toJSONString());
                     file.flush();
                 } catch (Exception e) {

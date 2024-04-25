@@ -36,7 +36,7 @@ public class OptionsLabel1 extends JPanel implements KeyListener {
 
         menuItems = new ArrayList<>();
 
-        ImageIcon backgroundIcon = new ImageIcon(Main.class.getResource("../images/introBackground.jpg"));
+        ImageIcon backgroundIcon = new ImageIcon(Main.path + "/Tetris_game/src/images/introBackground.jpg");
         optionLabel1 = new JLabel(new ImageIcon(backgroundIcon.getImage().getScaledInstance(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0], Image.SCALE_SMOOTH)));
         optionLabel1.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
 
@@ -128,7 +128,7 @@ public class OptionsLabel1 extends JPanel implements KeyListener {
                 else
                     System.out.println("ERRORRORORORORORORORORORORO!!!!!!");
 
-                try (FileWriter file = new FileWriter("Tetris_game/src/Settings.json")) {
+                try (FileWriter file = new FileWriter(String.format(Main.path) + "/Tetris_game/src/Settings.json")) {
                     file.write(SettingObject.toJSONString());
                     file.flush();
                 } catch (Exception e) {

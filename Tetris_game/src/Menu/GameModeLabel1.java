@@ -25,7 +25,7 @@ public class GameModeLabel1 extends JPanel implements KeyListener {
         menuItems = new ArrayList<>();
 
         // 배경 이미지 설정
-        ImageIcon backgroundIcon = new ImageIcon(Main.class.getResource("../images/introBackground.jpg"));
+        ImageIcon backgroundIcon = new ImageIcon(Main.path + "/Tetris_game/src/images/introBackground.jpg");
         mainLabel = new JLabel(new ImageIcon(backgroundIcon.getImage().getScaledInstance(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0], Image.SCALE_SMOOTH)));
         mainLabel.setSize(Main.SCREEN_WIDTH[0], Main.SCREEN_HEIGHT[0]);
 
